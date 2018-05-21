@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jdbc 
+        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<util:properties id="prop" location="classpath:mybatis/properties/datasource.properties" /> 
+	<bean id="dataSource" primary="true" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+	    <property name="driverClassName" value="#{prop['jdbc.driver']}" />
+	    <property name="url" value="#{prop['jdbc.url']}" />
+	    <property name="username" value="#{prop['jdbc.username']}" />
+	    <property name="password" value="#{prop['jdbc.password']}" />
+ 	    <property name="initialSize" value="#{prop['jdbc.initialSize']}" />
+	    <property name="maxActive" value="#{prop['jdbc.maxActive']}" />
+	    <property name="maxIdle" value="#{prop['jdbc.maxIdle']}" />
+	    <property name="minIdle" value="#{prop['jdbc.minIdle']}" />
+	    <property name="maxWait" value="#{prop['jdbc.maxWait']}" />
+	</bean>
+	
+	<util:properties id="propMySQL" location="classpath:mybatis/properties/datasource-mysql-br03.properties" />
+	<bean id="dataSourceMySQL" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+	    <property name="driverClassName" value="#{propMySQL['jdbc.driver']}" />
+	    <property name="url" value="#{propMySQL['jdbc.url']}" />
+	    <property name="username" value="#{propMySQL['jdbc.username']}" />
+	    <property name="password" value="#{propMySQL['jdbc.password']}" />
+ 	    <property name="initialSize" value="#{propMySQL['jdbc.initialSize']}" />
+	    <property name="maxActive" value="#{propMySQL['jdbc.maxActive']}" />
+	    <property name="maxIdle" value="#{propMySQL['jdbc.maxIdle']}" />
+	    <property name="minIdle" value="#{propMySQL['jdbc.minIdle']}" />
+	    <property name="maxWait" value="#{propMySQL['jdbc.maxWait']}" />
+	</bean>
+	
+	<util:properties id="propOracle" location="classpath:mybatis/properties/datasource-oracle.properties" />
+	<bean id="dataSourceOracle" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+	    <property name="driverClassName" value="#{propOracle['jdbc.driver']}" />
+	    <property name="url" value="#{propOracle['jdbc.url']}" />
+	    <property name="username" value="#{propOracle['jdbc.username']}" />
+	    <property name="password" value="#{propOracle['jdbc.password']}" />
+ 	    <property name="initialSize" value="#{propOracle['jdbc.initialSize']}" />
+	    <property name="maxActive" value="#{propOracle['jdbc.maxActive']}" />
+	    <property name="maxIdle" value="#{propOracle['jdbc.maxIdle']}" />
+	    <property name="minIdle" value="#{propOracle['jdbc.minIdle']}" />
+	    <property name="maxWait" value="#{propOracle['jdbc.maxWait']}" />
+	</bean>
+
+<!-- 	<bean id="dataSource-log4j" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSource" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL: " />
+			</bean>
+		</property>
+	</bean> -->
+	
+</beans>

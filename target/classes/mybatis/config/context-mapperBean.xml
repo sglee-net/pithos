@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jdbc 
+        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd">
+	
+  	<bean id="mapperSimple" class="org.chronotics.db.mybatis.Mapper">
+		<property name="sqlSession" ref="sqlSessionSimple" />
+	</bean>
+	
+   	<bean id="mapperBatch" class="org.chronotics.db.mybatis.Mapper">
+		<property name="sqlSession" ref="sqlSessionBatch" />
+	</bean>
+		
+ 	<bean id="mapperMap" class="org.chronotics.db.mybatis.MapperMap">
+		<property name="sqlSessionMap">
+			<map>
+				<entry key="sqlSessionSimpleMySQL" value-ref="sqlSessionSimpleMySQL" />
+				<entry key="sqlSessionSimpleOracle" value-ref="sqlSessionSimpleOracle" />
+			</map>
+		</property>
+	</bean>
+	
+  	<bean id="mapperSimpleMySQL" class="org.chronotics.db.mybatis.Mapper">
+		<property name="sqlSession" ref="sqlSessionSimpleMySQL" />
+	</bean>
+	
+   	<bean id="mapperBatchMySQL" class="org.chronotics.db.mybatis.Mapper">
+		<property name="sqlSession" ref="sqlSessionBatchMySQL" />
+	</bean>
+	
+  	<bean id="mapperSimpleOracle" class="org.chronotics.db.mybatis.Mapper">
+		<property name="sqlSession" ref="sqlSessionSimpleOracle" />
+	</bean>
+	
+   	<bean id="mapperBatchOracle" class="org.chronotics.db.mybatis.Mapper">
+		<property name="sqlSession" ref="sqlSessionBatchOracle" />
+	</bean>
+
+</beans>

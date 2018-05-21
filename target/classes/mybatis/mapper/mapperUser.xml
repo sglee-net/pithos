@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.chronotics.db.mybatis.app.mapper.MapperUser">
+<!-- 	
+	Please note the difference between using #{} and ${}. 
+	Hashtags sign means a prepared statement variables, while dollar sign means a simple string replace.
+	Simply, pair or sigle value
+ -->  
+ <select id="select" parameterType="map" resultType="map">
+    SELECT * 
+    FROM ${table}
+    WHERE
+    ${statement} <!-- name = #{name} -->
+  </select>
+  
+   <select id="selectList" parameterType="map" resultType="map">
+    SELECT * 
+    FROM ${table}
+    WHERE 
+    name = #{name}
+<!--     and name = #{name} -->
+  </select>
+  
+  <insert id="insert" parameterType="map">
+    INSERT 
+    INTO ${table}
+    (
+    name,
+    email,
+    info
+    )
+    VALUES
+    (
+    #{name},
+    #{email},
+    #{info}
+    )
+  </insert>
+  
+  <update id="update" parameterType="map">
+    UPDATE 
+    ${table}
+    SET INFO = 'changed info'
+    WHERE 
+    name = #{name}
+  </update>
+  
+  <delete id="delete" parameterType="map">
+	DELETE from ${table}
+	WHERE 
+	name = #{name}
+  </delete>
+  
+</mapper>
