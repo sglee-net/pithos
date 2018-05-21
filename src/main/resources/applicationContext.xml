@@ -1,0 +1,15 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	
+    <import resource="classpath:mybatis/config/context-dataSource.xml"/>
+    <import resource="classpath:mybatis/config/context-mapperBean.xml"/>
+    <import resource="classpath:mybatis/config/context-persistenceExceptionTranslator.xml"/>
+    <import resource="classpath:mybatis/config/context-sqlSessionFactoryBean.xml"/>
+    <import resource="classpath:mybatis/config/context-sqlSessionTemplate.xml"/>
+    
+<!--     <bean id="applicationContextProvder" class="org.chronotics.db.ApplicationContextProvider"/>
+ -->        
+</beans>
