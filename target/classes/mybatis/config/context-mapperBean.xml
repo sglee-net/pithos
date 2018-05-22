@@ -16,7 +16,7 @@
 		http://www.springframework.org/schema/util 
         http://www.springframework.org/schema/util/spring-util.xsd">
 		
- 	<bean id="mapperMap" class="org.chronotics.db.mybatis.MapperMap">
+  	<bean id="mapperMap" class="org.chronotics.db.mybatis.MapperMap">
 		<property name="mapperMap">
 			<map>
 				<entry key="mapperSimpleMySql" value-ref="mapperSimpleMySql" />

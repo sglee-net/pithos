@@ -39,5 +39,5 @@
 		<constructor-arg name="executorType" value="BATCH" />
 		<constructor-arg name="exceptionTranslator" ref="persistenceExceptionTranslator" />
 	</bean>
-   
+
 </beans>

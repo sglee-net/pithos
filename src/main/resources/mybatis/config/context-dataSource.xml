@@ -16,19 +16,6 @@
 		http://www.springframework.org/schema/util 
         http://www.springframework.org/schema/util/spring-util.xsd">
 
-<!-- 	<util:properties id="prop" location="classpath:mybatis/properties/datasource.properties" /> 
-	<bean id="dataSource" primary="true" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-	    <property name="driverClassName" value="#{prop['jdbc.driver']}" />
-	    <property name="url" value="#{prop['jdbc.url']}" />
-	    <property name="username" value="#{prop['jdbc.username']}" />
-	    <property name="password" value="#{prop['jdbc.password']}" />
- 	    <property name="initialSize" value="#{prop['jdbc.initialSize']}" />
-	    <property name="maxActive" value="#{prop['jdbc.maxActive']}" />
-	    <property name="maxIdle" value="#{prop['jdbc.maxIdle']}" />
-	    <property name="minIdle" value="#{prop['jdbc.minIdle']}" />
-	    <property name="maxWait" value="#{prop['jdbc.maxWait']}" />
-	</bean> -->
-	
 	<util:properties id="propMySql" location="classpath:mybatis/properties/datasource-mysql-br03.properties" />
 	<bean id="dataSourceMySql" primary="true" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
 	    <property name="driverClassName" value="#{propMySql['jdbc.driver']}" />

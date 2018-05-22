@@ -32,12 +32,7 @@ public class MapperMySql implements IMapper {
 	public SqlSession getSqlSession() {
 		return sqlSession;
 	}
-	
-	/**
-	 * setSqlSession
-	 * for DI injection
-	 * @param _sqlSession
-	 */
+
 	public void setSqlSession(SqlSession _sqlSession) {
 		sqlSession = _sqlSession;
 	}
