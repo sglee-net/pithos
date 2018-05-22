@@ -16,7 +16,7 @@
 		http://www.springframework.org/schema/util 
         http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<util:properties id="prop" location="classpath:mybatis/properties/datasource.properties" /> 
+<!-- 	<util:properties id="prop" location="classpath:mybatis/properties/datasource.properties" /> 
 	<bean id="dataSource" primary="true" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
 	    <property name="driverClassName" value="#{prop['jdbc.driver']}" />
 	    <property name="url" value="#{prop['jdbc.url']}" />
@@ -27,19 +27,19 @@
 	    <property name="maxIdle" value="#{prop['jdbc.maxIdle']}" />
 	    <property name="minIdle" value="#{prop['jdbc.minIdle']}" />
 	    <property name="maxWait" value="#{prop['jdbc.maxWait']}" />
-	</bean>
+	</bean> -->
 	
-	<util:properties id="propMySQL" location="classpath:mybatis/properties/datasource-mysql-br03.properties" />
-	<bean id="dataSourceMySQL" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-	    <property name="driverClassName" value="#{propMySQL['jdbc.driver']}" />
-	    <property name="url" value="#{propMySQL['jdbc.url']}" />
-	    <property name="username" value="#{propMySQL['jdbc.username']}" />
-	    <property name="password" value="#{propMySQL['jdbc.password']}" />
- 	    <property name="initialSize" value="#{propMySQL['jdbc.initialSize']}" />
-	    <property name="maxActive" value="#{propMySQL['jdbc.maxActive']}" />
-	    <property name="maxIdle" value="#{propMySQL['jdbc.maxIdle']}" />
-	    <property name="minIdle" value="#{propMySQL['jdbc.minIdle']}" />
-	    <property name="maxWait" value="#{propMySQL['jdbc.maxWait']}" />
+	<util:properties id="propMySql" location="classpath:mybatis/properties/datasource-mysql-br03.properties" />
+	<bean id="dataSourceMySql" primary="true" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+	    <property name="driverClassName" value="#{propMySql['jdbc.driver']}" />
+	    <property name="url" value="#{propMySql['jdbc.url']}" />
+	    <property name="username" value="#{propMySql['jdbc.username']}" />
+	    <property name="password" value="#{propMySql['jdbc.password']}" />
+ 	    <property name="initialSize" value="#{propMySql['jdbc.initialSize']}" />
+	    <property name="maxActive" value="#{propMySql['jdbc.maxActive']}" />
+	    <property name="maxIdle" value="#{propMySql['jdbc.maxIdle']}" />
+	    <property name="minIdle" value="#{propMySql['jdbc.minIdle']}" />
+	    <property name="maxWait" value="#{propMySql['jdbc.maxWait']}" />
 	</bean>
 	
 	<util:properties id="propOracle" location="classpath:mybatis/properties/datasource-oracle.properties" />

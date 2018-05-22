@@ -48,8 +48,8 @@ public class SqlStatementBuilderTest {
 	@Rule
 	public ExpectedException exceptions = ExpectedException.none();
 	
-	@Resource(name = "mapperSimpleMySQL")
-	private Mapper mapper;
+	@Resource(name = "mapperSimpleMySql")
+	private MapperMySql mapper;
 	
 	// table name
 	public static String TABLENAME = "table1";
@@ -88,9 +88,9 @@ public class SqlStatementBuilderTest {
 			"	c9 TIMESTAMP(6) NULL," + 
 			"	PRIMARY KEY (c0)" + 
 			");";
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
-			sqlParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",sqlParameter);
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+			sqlStatement.put(SqlStatement.statement,statement);
+			mapper.doStatement(sqlStatement);
 		}
 	}
 	
@@ -98,9 +98,9 @@ public class SqlStatementBuilderTest {
 		{
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLENAME;
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
-			sqlParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",sqlParameter);
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+			sqlStatement.put(SqlStatement.statement,statement);
+			mapper.doStatement(sqlStatement);
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class SqlStatementBuilderTest {
 		
 		List<List<Object>> records = new ArrayList<List<Object>>();
 		for(Map<String,Object> entry : itemSet) {
-			List<Object> variables = new ArrayList<Object>();
+			List<Object> record = new ArrayList<Object>();
 			
 			String str1 = (String) entry.get(CSTR1);
 			String str2 = (String) entry.get(CSTR2);
@@ -138,17 +138,17 @@ public class SqlStatementBuilderTest {
 			Object time = entry.get(CTIME);
 			Object timestamp = entry.get(CTIMESTAMP);
 						
-			variables.add(str1);
-			variables.add(str2);
-			variables.add(number);
+			record.add(str1);
+			record.add(str2);
+			record.add(number);
 			// binary
 			// blob
 			// clob
-			variables.add(date);
-			variables.add(time);
-			variables.add(timestamp);
+			record.add(date);
+			record.add(time);
+			record.add(timestamp);
 			
-			records.add(variables);
+			records.add(record);
 		}
 		
 		SqlStatement sqlStatement = 
@@ -156,7 +156,7 @@ public class SqlStatementBuilderTest {
 				.insert(TABLENAME)
 				.records(colNames, records)
 				.build();
-		return mapper.insert(sqlStatement);
+		return mapper.insertMultipleItems(sqlStatement);
 	}
 	
 	private int insertItemsOneByOne(String _tableName) throws Exception {
@@ -257,7 +257,7 @@ public class SqlStatementBuilderTest {
 					.build();
 			
 			List<Map<String,Object>> result = 
-					mapper.select(sqlStatement);
+					mapper.selectList(sqlStatement);
 			assertEquals(1, result.size());
 		}
 		
@@ -304,7 +304,7 @@ public class SqlStatementBuilderTest {
 					.build();
 			
 			List<Map<String,Object>> result = 
-					mapper.select(sqlStatement);
+					mapper.selectList(sqlStatement);
 			assertEquals(1, result.size());
 			
 			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));
@@ -318,6 +318,7 @@ public class SqlStatementBuilderTest {
 	@Test
 	public void testInsertMulti() throws Exception {
 		createTables();
+		
 		List<Object> colNames = new ArrayList<Object>();
 		List<List<Object>> records = new ArrayList<List<Object>>();
 		
@@ -359,19 +360,19 @@ public class SqlStatementBuilderTest {
 			records.add(record);
 		}
 		{
-			SqlStatement sqlParameter = 
+			SqlStatement sqlStatement = 
 					new SqlStatement.Builder()
 					.insert(TABLENAME)
 					.records(colNames, records)
 					.build();
 			
-			int count = mapper.insertMultipleItems(mapper.getClassName()+".insertMultipleItems", sqlParameter.clone());
+			int count = mapper.insertMultipleItems(sqlStatement);
 			assertEquals(itemCount, count);
 		}
 		
 		{
 			String str1 = (String) itemSet1.get(0).get(CSTR1);
-			SqlStatement sqlParameter = 
+			SqlStatement sqlStatement = 
 					new SqlStatement.Builder()
 					.select("*")
 					.from(TABLENAME)
@@ -379,7 +380,7 @@ public class SqlStatementBuilderTest {
 					.build();
 			
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", sqlParameter.clone());
+					mapper.selectList(sqlStatement);
 			assertEquals(1, result.size());
 			
 			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));

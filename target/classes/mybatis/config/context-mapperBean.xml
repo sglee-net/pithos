@@ -15,37 +15,29 @@
         http://www.springframework.org/schema/task/spring-task.xsd
 		http://www.springframework.org/schema/util 
         http://www.springframework.org/schema/util/spring-util.xsd">
-	
-  	<bean id="mapperSimple" class="org.chronotics.db.mybatis.Mapper">
-		<property name="sqlSession" ref="sqlSessionSimple" />
-	</bean>
-	
-   	<bean id="mapperBatch" class="org.chronotics.db.mybatis.Mapper">
-		<property name="sqlSession" ref="sqlSessionBatch" />
-	</bean>
 		
  	<bean id="mapperMap" class="org.chronotics.db.mybatis.MapperMap">
-		<property name="sqlSessionMap">
+		<property name="mapperMap">
 			<map>
-				<entry key="sqlSessionSimpleMySQL" value-ref="sqlSessionSimpleMySQL" />
-				<entry key="sqlSessionSimpleOracle" value-ref="sqlSessionSimpleOracle" />
+				<entry key="mapperSimpleMySql" value-ref="mapperSimpleMySql" />
+				<entry key="mapperSimpleOracle" value-ref="mapperSimpleOracle" />
 			</map>
 		</property>
 	</bean>
 	
-  	<bean id="mapperSimpleMySQL" class="org.chronotics.db.mybatis.Mapper">
-		<property name="sqlSession" ref="sqlSessionSimpleMySQL" />
+  	<bean id="mapperSimpleMySql" class="org.chronotics.db.mybatis.MapperMySql">
+		<property name="sqlSession" ref="sqlSessionSimpleMySql" />
 	</bean>
 	
-   	<bean id="mapperBatchMySQL" class="org.chronotics.db.mybatis.Mapper">
-		<property name="sqlSession" ref="sqlSessionBatchMySQL" />
+   	<bean id="mapperBatchMySql" class="org.chronotics.db.mybatis.MapperMySql">
+		<property name="sqlSession" ref="sqlSessionBatchMySql" />
 	</bean>
 	
-  	<bean id="mapperSimpleOracle" class="org.chronotics.db.mybatis.Mapper">
+  	<bean id="mapperSimpleOracle" class="org.chronotics.db.mybatis.MapperOracle">
 		<property name="sqlSession" ref="sqlSessionSimpleOracle" />
 	</bean>
 	
-   	<bean id="mapperBatchOracle" class="org.chronotics.db.mybatis.Mapper">
+   	<bean id="mapperBatchOracle" class="org.chronotics.db.mybatis.MapperOracle">
 		<property name="sqlSession" ref="sqlSessionBatchOracle" />
 	</bean>
 

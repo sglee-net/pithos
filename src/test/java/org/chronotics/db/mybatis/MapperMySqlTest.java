@@ -1,11 +1,7 @@
 package org.chronotics.db.mybatis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {org.chronotics.pithos.Application.class})
-public class CommonMapperTest {
+public class MapperMySqlTest {
 	// table name
 	public static String TABLE1 = "table1";
 	public static String TABLE2 = "table2";
@@ -69,7 +65,7 @@ public class CommonMapperTest {
 			");";
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
 			queryParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",queryParameter);
+			mapper.doStatement(queryParameter);
 		}
 		
 		{
@@ -89,7 +85,7 @@ public class CommonMapperTest {
 			");";
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
 			queryParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",queryParameter);
+			mapper.doStatement(queryParameter);
 		}
 	}
 	
@@ -99,14 +95,14 @@ public class CommonMapperTest {
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
 			queryParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",queryParameter);
+			mapper.doStatement(queryParameter);
 		}
 		{
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE2;
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
 			queryParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",queryParameter);
+			mapper.doStatement(queryParameter);
 		}
 	}
 	
@@ -168,7 +164,7 @@ public class CommonMapperTest {
 		queryParameter.put(SqlStatement.colNames, colNames);
 		queryParameter.put(SqlStatement.records, records);
 		
-		return mapper.insertMultipleItems(mapper.getClassName()+".insertMultipleItems", queryParameter);
+		return mapper.insertMultipleItems(queryParameter);
 	}
 	
 	private int insertItemsOneByOne(String _tableName) {
@@ -225,7 +221,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.colNames, colNames);
 			queryParameter.put(SqlStatement.colValues, colValues);
 
-			int count = mapper.insert(mapper.getClassName()+".insert", queryParameter);
+			int count = mapper.insert(queryParameter);
 			totalInsertion += count;
 		}
 		
@@ -250,7 +246,7 @@ public class CommonMapperTest {
 		queryParameter.put(SqlStatement.delete, delete);
 		queryParameter.put(SqlStatement.whereCondition, whereCondition);
 
-		int result = mapper.delete(mapper.getClassName()+".delete", queryParameter);
+		int result = mapper.delete(queryParameter);
 		
 		return result;
 	}
@@ -258,8 +254,8 @@ public class CommonMapperTest {
 	@Rule
 	public ExpectedException exceptions = ExpectedException.none();
 	
-	@Resource(name = "mapperSimpleMySQL")
-	private Mapper mapper;
+	@Resource(name = "mapperSimpleMySql")
+	private MapperMySql mapper;
 
 	@BeforeClass
 	public static void setup() {
@@ -410,7 +406,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.orderByAscOrDec, orderByAscOrDec);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(2, result.size());
 			
 			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));
@@ -453,7 +449,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.whereCondition, whereCondition);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(1, result.size());
 		}
 
@@ -474,7 +470,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.delete, delete);
 			queryParameter.put(SqlStatement.whereCondition, whereCondition);
 	
-			int result = mapper.delete(mapper.getClassName()+".delete", queryParameter);
+			int result = mapper.delete(queryParameter);
 			assertEquals(1, result);
 		}
 		
@@ -492,7 +488,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.from, from);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(itemCount-1, result.size());
 		}
 		
@@ -530,7 +526,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.innerJoin, innerJoinCondition);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(itemCount, result.size());
 		}
 
@@ -572,7 +568,7 @@ public class CommonMapperTest {
 			queryParameter.put(SqlStatement.whereCondition, whereCondition);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(itemCount, result.size());
 		}
 
@@ -611,7 +607,7 @@ public class CommonMapperTest {
 				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
 			}
 	
-			int count = mapper.update(mapper.getClassName()+".update", queryParameterUpdate);
+			int count = mapper.update(queryParameterUpdate);
 			assertEquals(1, count);
 		
 			// select
@@ -641,7 +637,7 @@ public class CommonMapperTest {
 			}
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameterSelect);
+					mapper.selectList(queryParameterSelect);
 			assertEquals(1, result.size());
 		}
 		
@@ -693,7 +689,7 @@ public class CommonMapperTest {
 				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
 			}
 	
-			int count = mapper.update(mapper.getClassName()+".update", queryParameterUpdate);
+			int count = mapper.update(queryParameterUpdate);
 			assertEquals(1, count);
 		
 			// select
@@ -719,7 +715,7 @@ public class CommonMapperTest {
 			}
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameterSelect);
+					mapper.selectList(queryParameterSelect);
 			assertEquals(i+1, result.size());
 			
 			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));

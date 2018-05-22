@@ -3,8 +3,6 @@ package org.chronotics.db.mybatis;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
-
 /**
  * @author SG Lee
  * @since 2013
@@ -28,18 +26,16 @@ public interface IMapper {
 	 * this function is for polymorphism of different DB connections
 	 * @return
 	 */
-	public SqlSession getSqlSession(String key);
 	
-	public SqlSession getSqlSession();
-	
+	/**
+ 	 * @param statement
+	 * query statement defined in a mapper file.
+	 * you should make two paths defined in .java and *mapper*.xml be equal.
+	 */
+
 	/**
 	 * select
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameter
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
@@ -48,16 +44,13 @@ public interface IMapper {
 	 * single object with the type of key, value 
 	 * key = property of a returned object, value = value of a returned object
 	 */
-	public Map<String,Object> selectOne(String key, String statement, Map<Object,Object> parameter);
+	public Map<String,Object> selectOne(Map<Object,Object> parameter);
+	
+	public Map<String,Object> selectOne(SqlStatement sqlStatement);
 	
 	/**
 	 * selectList
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameter
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
@@ -66,13 +59,13 @@ public interface IMapper {
 	 * multiple objects with the type of key, value 
 	 * key = property of a returned object, value = value of a returned object
 	 */
-	public List<Map<String,Object>> select(String key, String statement, Map<Object,Object> parameter);
+	public List<Map<String,Object>> selectList(Map<Object,Object> parameter);
+	
+	public List<Map<String,Object>> selectList(SqlStatement sqlStatement);
 
 	/**
 	 * selectWithStatement
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
 	 * @param statement
 	 * query statement
 	 * ex) SELECT ${statement}
@@ -80,17 +73,12 @@ public interface IMapper {
 	 * multiple objects with the type of key, value 
 	 * key = property of a returned object, value = value of a returned object
 	 */
-	public List<Map<String, Object>> selectWithStatement(String key, String statement);
+	public List<Map<String,Object>> selectWithStatement(String statement);
 	
 	
 	/**
 	 * insert
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameter
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
@@ -98,7 +86,9 @@ public interface IMapper {
 	 * @return
 	 * the number of inserted elements
 	 */
-	public int insert(String key, String statement, Map<Object,Object> parameter);
+	public int insert(Map<Object,Object> parameter);
+	
+	public int insert(SqlStatement sqlStatement);
 	
 	/**
 	 * insertWithStatement
@@ -109,16 +99,11 @@ public interface IMapper {
 	 * @return
 	 * the number of inserted elements
 	 */
-	public int insertWithStatement(String key, String statement);
+	public int insertWithStatement(String statement);
 	
 	/**
 	 * update
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameter
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
@@ -126,7 +111,9 @@ public interface IMapper {
 	 * @return
 	 * the number of updated elements
 	 */
-	public int update(String key, String statement, Map<Object,Object> parameter);
+	public int update(Map<Object,Object> parameter);
+	
+	public int update(SqlStatement sqlStatement);
 	
 	/**
 	 * insertWithStatement
@@ -137,16 +124,11 @@ public interface IMapper {
 	 * @return
 	 * the number of updateded elements
 	 */
-	public int updateWithStatement(String key, String statement);
+	public int updateWithStatement(String statement);
 	
 	/**
 	 * delete
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameter
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
@@ -154,66 +136,52 @@ public interface IMapper {
 	 * @return
 	 * the number of deleted elements
 	 */
-	public int delete(String key, String statement, Map<Object,Object> parameter);
+	public int delete(Map<Object,Object> parameter);
+	
+	public int delete(SqlStatement sqlStatement);
 	
 	/**
 	 * deletedWithStatement
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
 	 * @param statement
 	 * query statement
 	 * ex) delete ${statement}
 	 * @return
 	 * the number of deleted elements
 	 */
-	public int deleteWithStatement(String key, String statement);
+	public int deleteWithStatement(String statement);
 	
 	/**
 	 * insertMultipleItems
 	 * this function is mapped to the query statement in a mapper file.
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameters
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
 	 * key = property of a variable, value = value of a variable
 	 * @return
+	 * the number of inserted elements
 	 */
-	public int insertMultipleItems(String key, String statement, Map<Object,Object> parameters);
-	
-//	/**
-//	 * updateMultipleItems
-//	 * this function is mapped to the query statement in a mapper file.
-//	 * @param key
-//	 * key for MapperMap<MapperId, Mapper>
-//	 * @param statement
-//	 * query statement defined in a mapper file.
-//	 * you should make two paths defined in .java and *mapper*.xml be equal.
-//	 * @param parameters
-//	 * parameter to complete query.
-//	 * parameter can be used for statement or simple string variable.
-//	 * key = property of a variable, value = value of a variable
-//	 * @return
-//	 */
-//	public int updateMultipleItems(String key, String statement, Map<Object,Object> parameters);
+	public int insertMultipleItems(Map<Object,Object> parameters);
+		
+	/**
+	 * insertMultipleItems
+	 * @param sqlstatement
+	 * SqlStatement generated from SqlStatement.Builder()
+	 * @return
+	 * the number of inserted elements
+	 */
+	public int insertMultipleItems(SqlStatement sqlStatement);
 	
 	/**
 	 * doStatement
-	 * @param key
-	 * key for MapperMap<MapperId, Mapper>
-	 * @param statement
-	 * query statement defined in a mapper file.
-	 * you should make two paths defined in .java and *mapper*.xml be equal.
 	 * @param parameters
 	 * parameter to complete query.
 	 * parameter can be used for statement or simple string variable.
 	 * key = property of a variable, value = value of a variable
 	 * @return
 	 */
-	public int doStatement(String key, String statement, Map<Object,Object> parameters);
+	public int doStatement(Map<Object,Object> parameters);
+	
+	public int doStatement(SqlStatement sqlStatement);
 
 }

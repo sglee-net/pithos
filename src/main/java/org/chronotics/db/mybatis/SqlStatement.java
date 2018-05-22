@@ -60,21 +60,6 @@ public class SqlStatement {
 			return str;
 		}
 	}
-
-	// we don'nt nedd DB type
-	// this is determined with .xml file for SqlSession
-//	public static enum DBTYPE {
-//		ORACLE("ORACLE"),
-//		MYSQL("MYSQL"),
-//		NONE("NONE");
-//		private String str;
-//		DBTYPE(String _arg) {
-//			str = _arg;
-//		}
-//		public String toString() {
-//			return str;
-//		}
-//	}
 	
 	/**
 	 * toVV
@@ -93,61 +78,27 @@ public class SqlStatement {
 		}
 	}
 	private Map<Object,Object> sqlParameter = new HashMap<Object,Object>();
-	private String mapperStatement = null;
 	
-//	private DBTYPE dbType;
-//	private SqlStatement() {
-//		dbType = DBTYPE.NONE;
-//	}
-//	public SqlStatement(DBTYPE _dbType) {
-//		dbType = _dbType;
-//	}
-//	public DBTYPE getDbType() {
-//		return dbType;
-//	}
-	
-	public Map<Object,Object> getSqlParameter() {
+	public Map<Object,Object> getParameter() {
 		return sqlParameter;
 	}
 	
-	
-	public String getMapperStatement() {
-		return mapperStatement;
-	}
-	
-	public Map<Object,Object> clone() {
-		return this.sqlParameter
-				.entrySet()
-				.stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-	
 	public static class Builder {
-		private final String insertF = ".insert";
-		private final String insertMultipleItemsF = ".insertMultipleItems";
-		private final String selectF = ".select";
-		private final String updateF = ".update";
-		private final String deleteF = ".delete";
-
+		// for final return value
 		private Map<Object,Object> sqlParameter = new HashMap<Object,Object>();
-		private List<Object> selectList = null; //new ArrayList<Object>();
-		private List<Object> fromList = null; //new ArrayList<Object>();
-		private List<Object> insertList = null; //new ArrayList<Object>();
-		private List<Object> updateList = null; //new ArrayList<Object>();
-		private List<Object> deleteList = null; //new ArrayList<Object>();
-		private List<Object> whereList = null; //new ArrayList<Object>();
-		private Map<String,Object> whereMap = null; //new LinkedHashMap<String,Object>();
-		private List<Object> colNames = null; //new ArrayList<Object>(); // Object : String
-		private List<Object> colValues = null; //new ArrayList<Object>(); // Object : Number
-		private List<Object> records = null; //new ArrayList<Object>(); // Object : List of Object
-		private String mapperStatement = "";
-//		private DBTYPE dbType = DBTYPE.NONE;
+		// for temporary
+		private List<Object> selectList = null;
+		private List<Object> fromList = null;
+		private List<Object> insertList = null;
+		private List<Object> updateList = null;
+		private List<Object> deleteList = null;
+		private List<Object> whereList = null;
+		private Map<String,Object> whereMap = null;
+		private List<Object> colNames = null;
+		private List<Object> colValues = null;
+		private List<Object> records = null;
 		
 		public Builder() {}
-		
-//		public Builder(DBTYPE _dbType) {
-//			dbType = _dbType;
-//		}
 		
 		public SqlStatement build() throws Exception {
 			SqlStatement sqlStatement = new SqlStatement();
@@ -171,44 +122,14 @@ public class SqlStatement {
 					sqlParameter.put(SqlStatement.records, records);
 				}
 			}
-			
-			if(selectList != null) {
-				mapperStatement += this.selectF;//".select";
-			}
-			if(insertList != null) {
-				if(records != null) {
-					mapperStatement += this.insertMultipleItemsF;//".insertMultipleItems";
-				} else if (colValues != null) {
-					mapperStatement += this.insertF;//".insert";
-				} else {
-					throw new IllegalStateException("");
-				}
-			}
-			if(updateList != null) {
-				mapperStatement += this.updateF;//".update";
-			}
-			if(deleteList != null) {
-				mapperStatement += this.deleteF;//".delete";
-			}
-			
-//			sqlStatement.dbType = dbType;
-//			switch (dbType) {
-//			case MYSQL:
-//				break;
-//			case ORACLE:
-//				break;
-//			default:
-//				break;
-//			}
-			
-			sqlStatement.mapperStatement = this.mapperStatement;
-			sqlStatement.sqlParameter = this.sqlParameter;
-			// refer to clone() in SqlStatement
-			// copy is conducted when clone() function is called
-//					this.sqlParameter
-//					.entrySet()
-//					.stream()
-//					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+			sqlStatement.sqlParameter =	
+					this.sqlParameter
+					.entrySet()
+					.stream()
+					.collect(Collectors.toMap(
+							Map.Entry::getKey, 
+							Map.Entry::getValue));
 			
 			return sqlStatement;
 		}
@@ -404,7 +325,6 @@ public class SqlStatement {
 		
 		public Builder records(
 				List<Object> _colNames,
-//				List<Map<String,Object>> _records) {
 				List<List<Object>> _records) {
 			if(colNames == null) {
 				colNames = new ArrayList<Object>();
@@ -414,10 +334,7 @@ public class SqlStatement {
 			if(records == null) {
 				records = new ArrayList<Object>();
 			}
-//			for(Map<String,Object> l: _records) {
-//				Map<String,Object> e = new LinkedHashMap<String,Object>(l);
-//				records.add(e);
-//			}
+
 			for(List<Object> record: _records) {
 				List<Object> element = new ArrayList<Object>(record);
 				records.add(element);

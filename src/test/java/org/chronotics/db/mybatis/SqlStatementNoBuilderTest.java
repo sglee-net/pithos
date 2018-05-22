@@ -21,6 +21,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {org.chronotics.pithos.Application.class})
 public class SqlStatementNoBuilderTest {
 	
+	@Rule
+	public ExpectedException exceptions = ExpectedException.none();
+	
+	@Resource(name = "mapperSimpleMySql")
+	private MapperMySql mapper;
+	
 	// table name
 	public static String TABLE1 = "table1";
 	public static String TABLE2 = "table2";
@@ -62,9 +68,9 @@ public class SqlStatementNoBuilderTest {
 			"	c9 TIMESTAMP(6) NULL," + 
 			"	PRIMARY KEY (c0)" + 
 			");";
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
-			sqlParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",sqlParameter);
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+			sqlStatement.put(SqlStatement.statement,statement);
+			mapper.doStatement(sqlStatement);
 		}
 		{
 			String statement=
@@ -81,9 +87,9 @@ public class SqlStatementNoBuilderTest {
 			"	c9 TIMESTAMP(6) NULL," + 
 			"	PRIMARY KEY (c0)" + 
 			");";
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
-			sqlParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",sqlParameter);
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+			sqlStatement.put(SqlStatement.statement,statement);
+			mapper.doStatement(sqlStatement);
 		}
 	}
 	
@@ -91,16 +97,16 @@ public class SqlStatementNoBuilderTest {
 		{
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
-			sqlParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",sqlParameter);
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+			sqlStatement.put(SqlStatement.statement,statement);
+			mapper.doStatement(sqlStatement);
 		}
 		{
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE2;
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
-			sqlParameter.put(SqlStatement.statement,statement);
-			mapper.doStatement(mapper.getClassName()+".doStatement",sqlParameter);
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+			sqlStatement.put(SqlStatement.statement,statement);
+			mapper.doStatement(sqlStatement);
 		}
 	}
 	
@@ -153,16 +159,16 @@ public class SqlStatementNoBuilderTest {
 			records.add(variables);
 		}
 		
-		Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
+		Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
 		
 		List<Object> insert = new ArrayList<Object>();
 		insert.add(_tableName);
 		
-		sqlParameter.put(SqlStatement.insert, insert);
-		sqlParameter.put(SqlStatement.colNames, colNames);
-		sqlParameter.put(SqlStatement.records, records);
+		sqlStatement.put(SqlStatement.insert, insert);
+		sqlStatement.put(SqlStatement.colNames, colNames);
+		sqlStatement.put(SqlStatement.records, records);
 		
-		return mapper.insert(mapper.getClassName()+".insertMultipleItems",sqlParameter);
+		return mapper.insertMultipleItems(sqlStatement);
 	}
 	
 	private int insertItemsOneByOne(String _tableName) throws Exception {
@@ -189,7 +195,7 @@ public class SqlStatementNoBuilderTest {
 			Object timestamp = entry.get(CTIMESTAMP);
 			
 			// old method
-			Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
+			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
 			
 			List<Object> insert = new ArrayList<Object>();
 			insert.add(_tableName);
@@ -216,11 +222,11 @@ public class SqlStatementNoBuilderTest {
 			colValues.add(time);
 			colValues.add(timestamp);
 			
-			sqlParameter.put(SqlStatement.insert, insert);
-			sqlParameter.put(SqlStatement.colNames, colNames);
-			sqlParameter.put(SqlStatement.colValues, colValues);
+			sqlStatement.put(SqlStatement.insert, insert);
+			sqlStatement.put(SqlStatement.colNames, colNames);
+			sqlStatement.put(SqlStatement.colValues, colValues);
 			
-			int count = mapper.insert(mapper.getClassName()+".insert",sqlParameter);
+			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;
 		}
 		
@@ -228,7 +234,7 @@ public class SqlStatementNoBuilderTest {
 	}
 	
 	private int deleteLikeName(String _tableName) throws Exception {
-		Map<Object,Object> sqlParameter = new LinkedHashMap<Object,Object>();
+		Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
 		
 		List<Object> delete = new ArrayList<Object>();
 		delete.add(_tableName);
@@ -241,19 +247,13 @@ public class SqlStatementNoBuilderTest {
 		Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
 		whereCondition.put(SqlStatement.where.toString(), where);
 		
-		sqlParameter.put(SqlStatement.delete.toString(), delete);
-		sqlParameter.put(SqlStatement.whereCondition.toString(), whereCondition);
+		sqlStatement.put(SqlStatement.delete.toString(), delete);
+		sqlStatement.put(SqlStatement.whereCondition.toString(), whereCondition);
 
-		int result = mapper.delete(mapper.getClassName()+".delete", sqlParameter);
+		int result = mapper.delete(sqlStatement);
 		
 		return result;
 	}
-	
-	@Rule
-	public ExpectedException exceptions = ExpectedException.none();
-	
-	@Resource(name = "mapperSimpleMySQL")
-	private Mapper mapper;
 
 	@BeforeClass
 	public static void setup() {
@@ -407,7 +407,7 @@ public class SqlStatementNoBuilderTest {
 			queryParameter.put(SqlStatement.orderByAscOrDec, orderByAscOrDec);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(2, result.size());
 			
 			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));
@@ -450,7 +450,7 @@ public class SqlStatementNoBuilderTest {
 			queryParameter.put(SqlStatement.whereCondition, whereCondition);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(1, result.size());
 		}
 
@@ -471,7 +471,7 @@ public class SqlStatementNoBuilderTest {
 			queryParameter.put(SqlStatement.delete, delete);
 			queryParameter.put(SqlStatement.whereCondition, whereCondition);
 	
-			int result = mapper.delete(mapper.getClassName()+".delete", queryParameter);
+			int result = mapper.delete(queryParameter);
 			assertEquals(1, result);
 		}
 		
@@ -489,7 +489,7 @@ public class SqlStatementNoBuilderTest {
 			queryParameter.put(SqlStatement.from, from);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(itemCount-1, result.size());
 		}
 		
@@ -527,7 +527,7 @@ public class SqlStatementNoBuilderTest {
 			queryParameter.put(SqlStatement.innerJoin, innerJoinCondition);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(itemCount, result.size());
 		}
 
@@ -569,7 +569,7 @@ public class SqlStatementNoBuilderTest {
 			queryParameter.put(SqlStatement.whereCondition, whereCondition);
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameter);
+					mapper.selectList(queryParameter);
 			assertEquals(itemCount, result.size());
 		}
 
@@ -608,7 +608,7 @@ public class SqlStatementNoBuilderTest {
 				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
 			}
 	
-			int count = mapper.update(mapper.getClassName()+".update", queryParameterUpdate);
+			int count = mapper.update(queryParameterUpdate);
 			assertEquals(1, count);
 		
 			// select
@@ -638,7 +638,7 @@ public class SqlStatementNoBuilderTest {
 			}
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameterSelect);
+					mapper.selectList(queryParameterSelect);
 			assertEquals(1, result.size());
 		}
 		
@@ -690,7 +690,7 @@ public class SqlStatementNoBuilderTest {
 				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
 			}
 	
-			int count = mapper.update(mapper.getClassName()+".update", queryParameterUpdate);
+			int count = mapper.update(queryParameterUpdate);
 			assertEquals(1, count);
 		
 			// select
@@ -716,7 +716,7 @@ public class SqlStatementNoBuilderTest {
 			}
 	
 			List<Map<String,Object>> result = 
-					mapper.select(mapper.getClassName()+".select", queryParameterSelect);
+					mapper.selectList(queryParameterSelect);
 			assertEquals(i+1, result.size());
 			
 			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));

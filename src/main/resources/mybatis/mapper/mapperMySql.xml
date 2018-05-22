@@ -10,7 +10,7 @@
  * general purpose mapper
 -->
  
-<mapper namespace="org.chronotics.db.mybatis.Mapper">
+<mapper namespace="org.chronotics.db.mybatis.MapperMySql">
 
 <!-- 	
 	Please note the difference between using #{} and ${}. 
@@ -119,7 +119,7 @@
 	</if>
   </select>
   
-  <select id="select" parameterType="map" resultType="map">
+  <select id="selectList" parameterType="map" resultType="map">
   <!-- example -->
   <!-- 
     SELECT 
