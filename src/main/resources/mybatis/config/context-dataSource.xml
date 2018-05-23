@@ -18,7 +18,7 @@
 
 	<util:properties id="propMySql" location="classpath:mybatis/properties/datasource-mysql-br03.properties" />
 	<bean id="dataSourceMySql" primary="true" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-	    <property name="driverClassName" value="#{propMySql['jdbc.driver']}" />
+	    <property name="driverClassName" value="#{propMySql['jdbc.driverClassName']}" />
 	    <property name="url" value="#{propMySql['jdbc.url']}" />
 	    <property name="username" value="#{propMySql['jdbc.username']}" />
 	    <property name="password" value="#{propMySql['jdbc.password']}" />
@@ -31,7 +31,7 @@
 	
 	<util:properties id="propOracle" location="classpath:mybatis/properties/datasource-oracle.properties" />
 	<bean id="dataSourceOracle" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-	    <property name="driverClassName" value="#{propOracle['jdbc.driver']}" />
+	    <property name="driverClassName" value="#{propOracle['jdbc.driverClassName']}" />
 	    <property name="url" value="#{propOracle['jdbc.url']}" />
 	    <property name="username" value="#{propOracle['jdbc.username']}" />
 	    <property name="password" value="#{propOracle['jdbc.password']}" />
