@@ -69,7 +69,7 @@ public class SqlStatementNoBuilderTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.statement,statement);
+			sqlStatement.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 		{
@@ -88,7 +88,7 @@ public class SqlStatementNoBuilderTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.statement,statement);
+			sqlStatement.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}
@@ -98,14 +98,14 @@ public class SqlStatementNoBuilderTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.statement,statement);
+			sqlStatement.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 		{
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE2;
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.statement,statement);
+			sqlStatement.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}
@@ -164,9 +164,9 @@ public class SqlStatementNoBuilderTest {
 		List<Object> insert = new ArrayList<Object>();
 		insert.add(_tableName);
 		
-		sqlStatement.put(SqlStatement.insert, insert);
-		sqlStatement.put(SqlStatement.colNames, colNames);
-		sqlStatement.put(SqlStatement.records, records);
+		sqlStatement.put(SqlStatement.INSERT, insert);
+		sqlStatement.put(SqlStatement.COLNAMES, colNames);
+		sqlStatement.put(SqlStatement.RECORDS, records);
 		
 		return mapper.insertMultipleItems(sqlStatement);
 	}
@@ -222,9 +222,9 @@ public class SqlStatementNoBuilderTest {
 			colValues.add(time);
 			colValues.add(timestamp);
 			
-			sqlStatement.put(SqlStatement.insert, insert);
-			sqlStatement.put(SqlStatement.colNames, colNames);
-			sqlStatement.put(SqlStatement.colValues, colValues);
+			sqlStatement.put(SqlStatement.INSERT, insert);
+			sqlStatement.put(SqlStatement.COLNAMES, colNames);
+			sqlStatement.put(SqlStatement.COLVALUES, colValues);
 			
 			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;
@@ -245,10 +245,10 @@ public class SqlStatementNoBuilderTest {
 		where.add(SqlStatement.toVV("%"));
 		
 		Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-		whereCondition.put(SqlStatement.where.toString(), where);
+		whereCondition.put(SqlStatement.WHERE, where);
 		
-		sqlStatement.put(SqlStatement.delete.toString(), delete);
-		sqlStatement.put(SqlStatement.whereCondition.toString(), whereCondition);
+		sqlStatement.put(SqlStatement.DELETE, delete);
+		sqlStatement.put(SqlStatement.WHERECONDITION, whereCondition);
 
 		int result = mapper.delete(sqlStatement);
 		
@@ -388,9 +388,9 @@ public class SqlStatementNoBuilderTest {
 //			andOr.put(SqlStatement.or, or);
 			
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where.toString(), where);
-			whereCondition.put(SqlStatement.and.toString(), and);
-			whereCondition.put(SqlStatement.or.toString(), or);
+			whereCondition.put(SqlStatement.WHERE, where);
+			whereCondition.put(SqlStatement.AND, and);
+			whereCondition.put(SqlStatement.OR, or);
 			
 			List<Object> orderBy = new ArrayList<Object>();
 			orderBy.add(CNUMBER);
@@ -399,12 +399,12 @@ public class SqlStatementNoBuilderTest {
 			List<Object> orderByAscOrDec = new ArrayList<Object>();
 			orderByAscOrDec.add(SqlStatement.ASC);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
-			queryParameter.put(SqlStatement.orderBy, orderBy);
-			queryParameter.put(SqlStatement.orderByAscOrDec, orderByAscOrDec);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
+			queryParameter.put(SqlStatement.ORDERBY, orderBy);
+			queryParameter.put(SqlStatement.ORDERBYASCORDEC, orderByAscOrDec);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -443,11 +443,11 @@ public class SqlStatementNoBuilderTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -466,10 +466,10 @@ public class SqlStatementNoBuilderTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV("0"));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.delete, delete);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.DELETE, delete);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			int result = mapper.delete(queryParameter);
 			assertEquals(1, result);
@@ -485,8 +485,8 @@ public class SqlStatementNoBuilderTest {
 			List<Object> from = new ArrayList<Object>();
 			from.add(TABLE1);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -519,12 +519,12 @@ public class SqlStatementNoBuilderTest {
 			from.add(TABLE1);
 			
 			List<Object> innerJoinCondition = new ArrayList<Object>();
-			innerJoinCondition.add(SqlStatement.on.toString());
+			innerJoinCondition.add(SqlStatement.ON);
 			innerJoinCondition.add("table1.c1 = table2.c1");
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.innerJoin, innerJoinCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.INNERJOIN, innerJoinCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -562,11 +562,11 @@ public class SqlStatementNoBuilderTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(TABLE2+"." + CSTR1);
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where.toString(), where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -601,11 +601,11 @@ public class SqlStatementNoBuilderTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(SqlStatement.toVV(Integer.toString(i)));
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where, where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterUpdate.put(SqlStatement.update, update);
-				queryParameterUpdate.put(SqlStatement.set, set);
-				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterUpdate.put(SqlStatement.UPDATE, update);
+				queryParameterUpdate.put(SqlStatement.SET, set);
+				queryParameterUpdate.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			int count = mapper.update(queryParameterUpdate);
@@ -630,11 +630,11 @@ public class SqlStatementNoBuilderTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(SqlStatement.toVV(Integer.toString(i)));
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where, where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterSelect.put(SqlStatement.select, select);
-				queryParameterSelect.put(SqlStatement.from, from);
-				queryParameterSelect.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterSelect.put(SqlStatement.SELECT, select);
+				queryParameterSelect.put(SqlStatement.FROM, from);
+				queryParameterSelect.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			List<Map<String,Object>> result = 
@@ -682,12 +682,12 @@ public class SqlStatementNoBuilderTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(i);
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where.toString(), where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterUpdate.put(SqlStatement.update, update);
-				queryParameterUpdate.put(SqlStatement.innerJoin, innerJoin);
-				queryParameterUpdate.put(SqlStatement.set, set);
-				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterUpdate.put(SqlStatement.UPDATE, update);
+				queryParameterUpdate.put(SqlStatement.INNERJOIN, innerJoin);
+				queryParameterUpdate.put(SqlStatement.SET, set);
+				queryParameterUpdate.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			int count = mapper.update(queryParameterUpdate);
@@ -708,11 +708,11 @@ public class SqlStatementNoBuilderTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(numberUpdate);
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where, where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterSelect.put(SqlStatement.select, select);
-				queryParameterSelect.put(SqlStatement.from, from);
-				queryParameterSelect.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterSelect.put(SqlStatement.SELECT, select);
+				queryParameterSelect.put(SqlStatement.FROM, from);
+				queryParameterSelect.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			List<Map<String,Object>> result = 

@@ -64,7 +64,7 @@ public class MapperMySqlTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(queryParameter);
 		}
 		
@@ -84,7 +84,7 @@ public class MapperMySqlTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(queryParameter);
 		}
 	}
@@ -94,14 +94,14 @@ public class MapperMySqlTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(queryParameter);
 		}
 		{
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE2;
 			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(queryParameter);
 		}
 	}
@@ -160,9 +160,9 @@ public class MapperMySqlTest {
 			records.add(variables);
 		}
 		
-		queryParameter.put(SqlStatement.insert, insert);
-		queryParameter.put(SqlStatement.colNames, colNames);
-		queryParameter.put(SqlStatement.records, records);
+		queryParameter.put(SqlStatement.INSERT, insert);
+		queryParameter.put(SqlStatement.COLNAMES, colNames);
+		queryParameter.put(SqlStatement.RECORDS, records);
 		
 		return mapper.insertMultipleItems(queryParameter);
 	}
@@ -217,9 +217,9 @@ public class MapperMySqlTest {
 			colValues.add(time);
 			colValues.add(timestamp);
 			
-			queryParameter.put(SqlStatement.insert, insert);
-			queryParameter.put(SqlStatement.colNames, colNames);
-			queryParameter.put(SqlStatement.colValues, colValues);
+			queryParameter.put(SqlStatement.INSERT, insert);
+			queryParameter.put(SqlStatement.COLNAMES, colNames);
+			queryParameter.put(SqlStatement.COLVALUES, colValues);
 
 			int count = mapper.insert(queryParameter);
 			totalInsertion += count;
@@ -241,10 +241,10 @@ public class MapperMySqlTest {
 		where.add(SqlStatement.toVV("%"));
 		
 		Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-		whereCondition.put(SqlStatement.where, where);
+		whereCondition.put(SqlStatement.WHERE, where);
 		
-		queryParameter.put(SqlStatement.delete, delete);
-		queryParameter.put(SqlStatement.whereCondition, whereCondition);
+		queryParameter.put(SqlStatement.DELETE, delete);
+		queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 
 		int result = mapper.delete(queryParameter);
 		
@@ -387,9 +387,9 @@ public class MapperMySqlTest {
 //			andOr.put(SqlStatement.or, or);
 			
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where.toString(), where);
-			whereCondition.put(SqlStatement.and.toString(), and);
-			whereCondition.put(SqlStatement.or.toString(), or);
+			whereCondition.put(SqlStatement.WHERE, where);
+			whereCondition.put(SqlStatement.AND, and);
+			whereCondition.put(SqlStatement.OR, or);
 			
 			List<Object> orderBy = new ArrayList<Object>();
 			orderBy.add(CNUMBER);
@@ -398,12 +398,12 @@ public class MapperMySqlTest {
 			List<Object> orderByAscOrDec = new ArrayList<Object>();
 			orderByAscOrDec.add(SqlStatement.ASC);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
-			queryParameter.put(SqlStatement.orderBy, orderBy);
-			queryParameter.put(SqlStatement.orderByAscOrDec, orderByAscOrDec);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
+			queryParameter.put(SqlStatement.ORDERBY, orderBy);
+			queryParameter.put(SqlStatement.ORDERBYASCORDEC, orderByAscOrDec);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -442,11 +442,11 @@ public class MapperMySqlTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -465,10 +465,10 @@ public class MapperMySqlTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV("0"));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.delete, delete);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.DELETE, delete);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			int result = mapper.delete(queryParameter);
 			assertEquals(1, result);
@@ -484,8 +484,8 @@ public class MapperMySqlTest {
 			List<Object> from = new ArrayList<Object>();
 			from.add(TABLE1);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -518,12 +518,12 @@ public class MapperMySqlTest {
 			from.add(TABLE1);
 			
 			List<Object> innerJoinCondition = new ArrayList<Object>();
-			innerJoinCondition.add(SqlStatement.on.toString());
+			innerJoinCondition.add(SqlStatement.ON);
 			innerJoinCondition.add("table1.c1 = table2.c1");
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.innerJoin, innerJoinCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.INNERJOIN, innerJoinCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -561,11 +561,11 @@ public class MapperMySqlTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(TABLE2+"." + CSTR1);
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where.toString(), where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -600,11 +600,11 @@ public class MapperMySqlTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(SqlStatement.toVV(Integer.toString(i)));
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where, where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterUpdate.put(SqlStatement.update, update);
-				queryParameterUpdate.put(SqlStatement.set, set);
-				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterUpdate.put(SqlStatement.UPDATE, update);
+				queryParameterUpdate.put(SqlStatement.SET, set);
+				queryParameterUpdate.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			int count = mapper.update(queryParameterUpdate);
@@ -629,11 +629,11 @@ public class MapperMySqlTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(SqlStatement.toVV(Integer.toString(i)));
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where, where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterSelect.put(SqlStatement.select, select);
-				queryParameterSelect.put(SqlStatement.from, from);
-				queryParameterSelect.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterSelect.put(SqlStatement.SELECT, select);
+				queryParameterSelect.put(SqlStatement.FROM, from);
+				queryParameterSelect.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			List<Map<String,Object>> result = 
@@ -681,12 +681,12 @@ public class MapperMySqlTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(i);
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where.toString(), where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterUpdate.put(SqlStatement.update, update);
-				queryParameterUpdate.put(SqlStatement.innerJoin, innerJoin);
-				queryParameterUpdate.put(SqlStatement.set, set);
-				queryParameterUpdate.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterUpdate.put(SqlStatement.UPDATE, update);
+				queryParameterUpdate.put(SqlStatement.INNERJOIN, innerJoin);
+				queryParameterUpdate.put(SqlStatement.SET, set);
+				queryParameterUpdate.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			int count = mapper.update(queryParameterUpdate);
@@ -707,11 +707,11 @@ public class MapperMySqlTest {
 				where.add(SqlStatement.OPERATOR.EQ);
 				where.add(numberUpdate);
 				Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-				whereCondition.put(SqlStatement.where, where);
+				whereCondition.put(SqlStatement.WHERE, where);
 				
-				queryParameterSelect.put(SqlStatement.select, select);
-				queryParameterSelect.put(SqlStatement.from, from);
-				queryParameterSelect.put(SqlStatement.whereCondition, whereCondition);
+				queryParameterSelect.put(SqlStatement.SELECT, select);
+				queryParameterSelect.put(SqlStatement.FROM, from);
+				queryParameterSelect.put(SqlStatement.WHERECONDITION, whereCondition);
 			}
 	
 			List<Map<String,Object>> result = 

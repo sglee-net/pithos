@@ -114,7 +114,7 @@ public class MultipleMapperTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapperMySql.doStatement(queryParameter);
 		}
 
@@ -134,7 +134,7 @@ public class MultipleMapperTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapperMySql.doStatement(queryParameter);
 		}
 	}
@@ -184,9 +184,9 @@ public class MultipleMapperTest {
 		List<Object> insert = new ArrayList<Object>();
 		insert.add(TABLE1);
 		
-		sqlStatement.put(SqlStatement.insert, insert);
-		sqlStatement.put(SqlStatement.colNames, colNames);
-		sqlStatement.put(SqlStatement.records, records);
+		sqlStatement.put(SqlStatement.INSERT, insert);
+		sqlStatement.put(SqlStatement.COLNAMES, colNames);
+		sqlStatement.put(SqlStatement.RECORDS, records);
 		
 		return mapper.insertMultipleItems(sqlStatement);
 	}
@@ -234,9 +234,9 @@ public class MultipleMapperTest {
 			colValues.add(time);
 			colValues.add(timestamp);
 			
-			sqlStatement.put(SqlStatement.insert, insert);
-			sqlStatement.put(SqlStatement.colNames, colNames);
-			sqlStatement.put(SqlStatement.colValues, colValues);
+			sqlStatement.put(SqlStatement.INSERT, insert);
+			sqlStatement.put(SqlStatement.COLNAMES, colNames);
+			sqlStatement.put(SqlStatement.COLVALUES, colValues);
 			
 			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;
@@ -301,11 +301,11 @@ public class MultipleMapperTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -329,11 +329,11 @@ public class MultipleMapperTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameter.put(SqlStatement.select, select);
-			queryParameter.put(SqlStatement.from, from);
-			queryParameter.put(SqlStatement.whereCondition, whereCondition);
+			queryParameter.put(SqlStatement.SELECT, select);
+			queryParameter.put(SqlStatement.FROM, from);
+			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);

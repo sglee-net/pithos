@@ -1,5 +1,7 @@
 package org.chronotics.db.mybatis;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -7,35 +9,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SqlStatement {
 	
-	public static String statement = "statement";
-	public static String select = "select";
-	public static String insert = "insert";
-	public static String update = "update";
-	public static String delete = "delete";
-	public static String from = "from";
-	public static String whereCondition = "whereCondition";
-	public static String where = "where";
-	public static String whereNot = "whereNot";
-	public static String and = "and";
-	public static String andNot = "andNot";
-	public static String or = "or";
-	public static String orNot = "orNot";
-	public static String orderBy = "orderBy";
-	public static String orderByAscOrDec = "orderByAscOrDec";
+	public static String STATEMENT = "statement";
+	public static String SELECT = "select";
+	public static String INSERT = "insert";
+	public static String UPDATE = "update";
+	public static String DELETE = "delete";
+	public static String FROM = "from";
+	public static String WHERECONDITION = "whereCondition";
+	public static String WHERE = "where";
+	public static String WHERENOT = "whereNot";
+	public static String AND = "and";
+	public static String ANDNOT = "andNot";
+	public static String OR = "or";
+	public static String ORNOT = "orNot";
+	public static String ORDERBY = "orderBy";
+	public static String ORDERBYASCORDEC = "orderByAscOrDec";
 	public static String ASC = "ASC";
 	public static String DESC= "DESC";
-	public static String colNames = "colNames";
-	public static String colValues = "colValues";
-	public static String records = "records";
-	public static String set = "set";
-	public static String innerJoin = "innerJoin";
-	public static String leftJoin = "leftJoin";
-	public static String rightJoin = "rightJoin";
-	public static String fullOuterJoin = "fullOuterJoin";
-	public static String on = "on";
+	public static String COLNAMES = "colNames";
+	public static String COLVALUES = "colValues";
+	public static String RECORDS = "records";
+	public static String SET = "set";
+	public static String INNERJOIN = "innerJoin";
+	public static String LEFTJOIN = "leftJoin";
+	public static String RIGHTJOIN = "rightJoin";
+	public static String FULLOUTERJOIN = "fullOuterJoin";
+	public static String ON = "on";
 	
+	protected static Map<String, OPERATOR> operatorMap = new HashMap<String, OPERATOR>();
 	public static enum OPERATOR {
 		PARENTHESIS_LEFT("("),
 		PARENTHESIS_RIGHT(")"),
@@ -55,10 +62,15 @@ public class SqlStatement {
 		private String str;
 		OPERATOR(String _arg) {
 			str = _arg;
+			operatorMap.put(_arg,this);
 		}
 		public String toString() {
 			return str;
 		}
+	}
+	
+	public static OPERATOR getOperator(String _name) {
+		return operatorMap.get(_name);
 	}
 	
 	/**
@@ -104,22 +116,22 @@ public class SqlStatement {
 			SqlStatement sqlStatement = new SqlStatement();
 			if(whereMap != null) {
 				if(!whereMap.isEmpty()) {
-					sqlParameter.put(SqlStatement.whereCondition, whereMap);
+					sqlParameter.put(WHERECONDITION, whereMap);
 				}
 			}
 			
 			if(colNames != null && colValues !=null) {
 				if(!colNames.isEmpty() && !colValues.isEmpty()) {
 					assert(colNames.size() == colValues.size());
-					sqlParameter.put(SqlStatement.colNames, colNames);
-					sqlParameter.put(SqlStatement.colValues, colValues);
+					sqlParameter.put(COLNAMES, colNames);
+					sqlParameter.put(COLVALUES, colValues);
 				}
 			}
 			
 			if(colNames != null && records != null) {
 				if(!colNames.isEmpty() && !records.isEmpty()) {
-					sqlParameter.put(SqlStatement.colNames, colNames);
-					sqlParameter.put(SqlStatement.records, records);
+					sqlParameter.put(COLNAMES, colNames);
+					sqlParameter.put(RECORDS, records);
 				}
 			}
 
@@ -143,7 +155,7 @@ public class SqlStatement {
 				assert(e instanceof String);
 				selectList.add(e);
 			}
-			sqlParameter.put(select, selectList);
+			sqlParameter.put(SELECT, selectList);
 			return this;
 		}
 		
@@ -153,7 +165,7 @@ public class SqlStatement {
 			}
 			fromList.clear();
 			fromList.add(object);
-			sqlParameter.put(from, fromList);
+			sqlParameter.put(FROM, fromList);
 			return this;
 		}
 		
@@ -163,7 +175,7 @@ public class SqlStatement {
 			}
 			insertList.clear();
 			insertList.add(object);
-			sqlParameter.put(SqlStatement.insert, insertList);
+			sqlParameter.put(INSERT, insertList);
 			return this;
 		}
 		
@@ -173,7 +185,7 @@ public class SqlStatement {
 			}
 			updateList.clear();
 			updateList.add(object);
-			sqlParameter.put(update, updateList);
+			sqlParameter.put(UPDATE, updateList);
 			return this;
 		}
 		
@@ -183,7 +195,7 @@ public class SqlStatement {
 			}
 			deleteList.clear();
 			deleteList.add(object);
-			sqlParameter.put(delete, deleteList);
+			sqlParameter.put(DELETE, deleteList);
 			return this;
 		}
 		
@@ -222,10 +234,10 @@ public class SqlStatement {
 			this.addObjectToWhereList(leftOperand);
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
-			assert(whereMap.get(where.toString()) == null);
-			assert(whereMap.get(whereNot.toString()) == null);
+			assert(whereMap.get(WHERE) == null);
+			assert(whereMap.get(WHERENOT) == null);
 			
-			whereMap.put(where.toString(), whereList);
+			whereMap.put(WHERE, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -239,10 +251,10 @@ public class SqlStatement {
 			this.addObjectToWhereList(leftOperand);
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
-			assert(whereMap.get(where.toString()) == null);
-			assert(whereMap.get(whereNot.toString()) == null);
+			assert(whereMap.get(WHERE) == null);
+			assert(whereMap.get(WHERENOT) == null);
 			
-			whereMap.put(whereNot.toString(), whereList);
+			whereMap.put(WHERENOT, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -257,7 +269,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(and, whereList);
+			whereMap.put(AND, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -272,7 +284,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(andNot, whereList);
+			whereMap.put(ANDNOT, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -287,7 +299,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(or, whereList);
+			whereMap.put(OR, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -302,7 +314,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(orNot, whereList);
+			whereMap.put(ORNOT, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -320,6 +332,21 @@ public class SqlStatement {
 			
 			this.colNames.add(name);
 			this.colValues.add(value);
+			return this;
+		}
+		
+		public Builder colValues(
+				List<Object> _colNames,
+				List<Object> _colValues) {
+			if(colNames == null) {
+				colNames = new ArrayList<Object>();
+			}
+			if(colValues == null) {
+				colValues = new ArrayList<Object>();
+			}
+			
+			colNames.addAll(_colNames);
+			colValues.addAll(_colValues);
 			return this;
 		}
 		
@@ -342,5 +369,72 @@ public class SqlStatement {
 			
 			return this;
 		}
+	}
+	
+	static Object createObject(String _className) 
+			throws ClassNotFoundException, 
+			NoSuchMethodException, 
+			SecurityException, 
+			InstantiationException, 
+			IllegalAccessException, 
+			IllegalArgumentException, 
+			InvocationTargetException {
+		Class<?> c = Class.forName(_className);
+		Constructor<?> cons = c.getConstructor(String.class);
+		Object object = cons.newInstance();
+		return object;
+	}
+	
+	public static List<Object> getColNames(String _json) throws JSONException {
+		List<Object> rtObject = null;
+		JSONObject jsonObject = new JSONObject(_json);
+		Object obj = jsonObject.get(SqlStatement.COLNAMES);
+		if(obj instanceof JSONArray == false) {
+			throw new JSONException("There is no SqlStatement.COLNAMES");
+		}
+		rtObject = new ArrayList<Object>();
+		JSONArray array = (JSONArray)obj;
+		for(int i=0; i<array.length(); i++) {
+			rtObject.add(array.get(i));
+		}
+		return rtObject;
+	}
+	
+	public static List<Object> getColValues(String _json) throws JSONException {
+		List<Object> rtObject = null;
+		JSONObject jsonObject = new JSONObject(_json);
+		Object obj = jsonObject.get(SqlStatement.COLVALUES);
+		if(obj instanceof JSONArray == false) {
+			throw new JSONException("There is no SqlStatement.COLVALUES");
+		}
+		rtObject = new ArrayList<Object>();
+		JSONArray array = (JSONArray)obj;
+		for(int i=0; i<array.length(); i++) {
+			rtObject.add(array.get(i));
+		}
+		return rtObject;
+	}
+	
+	public static List<List<Object>> getRecords(String _json) throws JSONException {
+		List<List<Object>> rtObject = null;
+		JSONObject jsonObject = new JSONObject(_json);
+		Object obj = jsonObject.get(SqlStatement.RECORDS);
+		if(obj instanceof JSONArray == false) {
+			throw new JSONException("There is no SqlStatement.RECORDS");
+		}
+		JSONArray jsonArrayRecords = (JSONArray)obj;
+		rtObject = new ArrayList<List<Object>>();
+		for(int i=0; i<jsonArrayRecords.length(); i++) {
+			JSONArray jsonArrayRecord = jsonArrayRecords.getJSONArray(i);
+			if(jsonArrayRecord == null) {
+				throw new JSONException("There is no array in records");
+			}
+			List<Object> record = new ArrayList<Object>();
+			for(int j=0; j<jsonArrayRecord.length(); j++) {
+				record.add(jsonArrayRecord.get(j));
+			}
+			rtObject.add(record);
+		}
+		return rtObject;
 	}
 }

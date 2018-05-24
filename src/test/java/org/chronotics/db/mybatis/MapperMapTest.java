@@ -96,7 +96,7 @@ public class MapperMapTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(key, queryParameter);
 		}
 	}
@@ -116,7 +116,7 @@ public class MapperMapTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-			queryParameter.put(SqlStatement.statement,statement);
+			queryParameter.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(key, queryParameter);
 		}
 	}
@@ -164,9 +164,9 @@ public class MapperMapTest {
 			colValues.add(time);
 			colValues.add(timestamp);
 			
-			sqlStatement.put(SqlStatement.insert, insert);
-			sqlStatement.put(SqlStatement.colNames, colNames);
-			sqlStatement.put(SqlStatement.colValues, colValues);
+			sqlStatement.put(SqlStatement.INSERT, insert);
+			sqlStatement.put(SqlStatement.COLNAMES, colNames);
+			sqlStatement.put(SqlStatement.COLVALUES, colValues);
 			
 			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;
@@ -226,11 +226,11 @@ public class MapperMapTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV("0"));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameterSelect.put(SqlStatement.select, select);
-			queryParameterSelect.put(SqlStatement.from, from);
-			queryParameterSelect.put(SqlStatement.whereCondition, whereCondition);
+			queryParameterSelect.put(SqlStatement.SELECT, select);
+			queryParameterSelect.put(SqlStatement.FROM, from);
+			queryParameterSelect.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapperMap.selectList(key, queryParameterSelect);
@@ -258,11 +258,11 @@ public class MapperMapTest {
 			where.add(SqlStatement.OPERATOR.EQ);
 			where.add(SqlStatement.toVV("0"));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.where, where);
+			whereCondition.put(SqlStatement.WHERE, where);
 			
-			queryParameterSelect.put(SqlStatement.select, select);
-			queryParameterSelect.put(SqlStatement.from, from);
-			queryParameterSelect.put(SqlStatement.whereCondition, whereCondition);
+			queryParameterSelect.put(SqlStatement.SELECT, select);
+			queryParameterSelect.put(SqlStatement.FROM, from);
+			queryParameterSelect.put(SqlStatement.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapperMap.selectList(key, queryParameterSelect);

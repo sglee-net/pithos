@@ -89,7 +89,7 @@ public class SqlStatementBuilderTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.statement,statement);
+			sqlStatement.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}
@@ -99,7 +99,7 @@ public class SqlStatementBuilderTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLENAME;
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.statement,statement);
+			sqlStatement.put(SqlStatement.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}
