@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
@@ -14,33 +15,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SqlStatement {
+	public static class KEYWORD {
+		public static String RESULTSET = "resultSet";
+		public static String COLNAMES = "colNames";
+		public static String COLVALUES = "colValues";
+		public static String RECORDS = "records";
+	}
 	
-	public static String STATEMENT = "statement";
-	public static String SELECT = "select";
-	public static String INSERT = "insert";
-	public static String UPDATE = "update";
-	public static String DELETE = "delete";
-	public static String FROM = "from";
-	public static String WHERECONDITION = "whereCondition";
-	public static String WHERE = "where";
-	public static String WHERENOT = "whereNot";
-	public static String AND = "and";
-	public static String ANDNOT = "andNot";
-	public static String OR = "or";
-	public static String ORNOT = "orNot";
-	public static String ORDERBY = "orderBy";
-	public static String ORDERBYASCORDEC = "orderByAscOrDec";
-	public static String ASC = "ASC";
-	public static String DESC= "DESC";
-	public static String COLNAMES = "colNames";
-	public static String COLVALUES = "colValues";
-	public static String RECORDS = "records";
-	public static String SET = "set";
-	public static String INNERJOIN = "innerJoin";
-	public static String LEFTJOIN = "leftJoin";
-	public static String RIGHTJOIN = "rightJoin";
-	public static String FULLOUTERJOIN = "fullOuterJoin";
-	public static String ON = "on";
+//	public static class COMMAND {
+		public static String STATEMENT = "statement";
+		public static String SELECT = "select";
+		public static String INSERT = "insert";
+		public static String UPDATE = "update";
+		public static String DELETE = "delete";
+		public static String FROM = "from";
+		public static String WHERECONDITION = "whereCondition";
+		public static String WHERE = "where";
+		public static String WHERENOT = "whereNot";
+		public static String AND = "and";
+		public static String ANDNOT = "andNot";
+		public static String OR = "or";
+		public static String ORNOT = "orNot";
+		public static String ORDERBY = "orderBy";
+		public static String ORDERBYASCORDEC = "orderByAscOrDec";
+		public static String ASC = "ASC";
+		public static String DESC= "DESC";
+		public static String SET = "set";
+		public static String INNERJOIN = "innerJoin";
+		public static String LEFTJOIN = "leftJoin";
+		public static String RIGHTJOIN = "rightJoin";
+		public static String FULLOUTERJOIN = "fullOuterJoin";
+		public static String ON = "on";
+//	}
 	
 	protected static Map<String, OPERATOR> operatorMap = new HashMap<String, OPERATOR>();
 	public static enum OPERATOR {
@@ -112,7 +118,7 @@ public class SqlStatement {
 		
 		public Builder() {}
 		
-		public SqlStatement build() throws Exception {
+		public SqlStatement build() {
 			SqlStatement sqlStatement = new SqlStatement();
 			if(whereMap != null) {
 				if(!whereMap.isEmpty()) {
@@ -123,15 +129,15 @@ public class SqlStatement {
 			if(colNames != null && colValues !=null) {
 				if(!colNames.isEmpty() && !colValues.isEmpty()) {
 					assert(colNames.size() == colValues.size());
-					sqlParameter.put(COLNAMES, colNames);
-					sqlParameter.put(COLVALUES, colValues);
+					sqlParameter.put(KEYWORD.COLNAMES, colNames);
+					sqlParameter.put(KEYWORD.COLVALUES, colValues);
 				}
 			}
 			
 			if(colNames != null && records != null) {
 				if(!colNames.isEmpty() && !records.isEmpty()) {
-					sqlParameter.put(COLNAMES, colNames);
-					sqlParameter.put(RECORDS, records);
+					sqlParameter.put(KEYWORD.COLNAMES, colNames);
+					sqlParameter.put(KEYWORD.RECORDS, records);
 				}
 			}
 
@@ -388,7 +394,7 @@ public class SqlStatement {
 	public static List<Object> getColNames(String _json) throws JSONException {
 		List<Object> rtObject = null;
 		JSONObject jsonObject = new JSONObject(_json);
-		Object obj = jsonObject.get(SqlStatement.COLNAMES);
+		Object obj = jsonObject.get(SqlStatement.KEYWORD.COLNAMES);
 		if(obj instanceof JSONArray == false) {
 			throw new JSONException("There is no SqlStatement.COLNAMES");
 		}
@@ -403,7 +409,7 @@ public class SqlStatement {
 	public static List<Object> getColValues(String _json) throws JSONException {
 		List<Object> rtObject = null;
 		JSONObject jsonObject = new JSONObject(_json);
-		Object obj = jsonObject.get(SqlStatement.COLVALUES);
+		Object obj = jsonObject.get(SqlStatement.KEYWORD.COLVALUES);
 		if(obj instanceof JSONArray == false) {
 			throw new JSONException("There is no SqlStatement.COLVALUES");
 		}
@@ -418,7 +424,7 @@ public class SqlStatement {
 	public static List<List<Object>> getRecords(String _json) throws JSONException {
 		List<List<Object>> rtObject = null;
 		JSONObject jsonObject = new JSONObject(_json);
-		Object obj = jsonObject.get(SqlStatement.RECORDS);
+		Object obj = jsonObject.get(SqlStatement.KEYWORD.RECORDS);
 		if(obj instanceof JSONArray == false) {
 			throw new JSONException("There is no SqlStatement.RECORDS");
 		}
@@ -437,4 +443,37 @@ public class SqlStatement {
 		}
 		return rtObject;
 	}
+	
+	public static JSONObject getJSonObject(
+			List<Map<String,Object>> _resultSet, 
+			int count_from, 
+			int count_to) {
+		JSONObject object = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		int i = 0;
+		for(Map<String,Object> element: _resultSet) {
+			if(count_from <= i && i < count_to) {
+				JSONObject jsonChild = new JSONObject();
+				for(Entry<String,Object> entry: element.entrySet()) {
+					Object entryObj = entry.getValue();
+					try {
+						jsonChild.put(entry.getKey(), entryObj);
+					} catch (JSONException e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+				jsonArray.put(jsonChild);
+			}
+			i++;
+		}
+		try {
+			object.put("resultSet", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return object;
+	}
+
 }

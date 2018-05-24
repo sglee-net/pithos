@@ -28,23 +28,4 @@ public abstract class Mapper implements IMapper {
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject getJSonObject(
-			List<Map<String,Object>> _resultSet, 
-			int count_from, 
-			int count_to) throws JSONException {
-		JSONObject jsonObject = new JSONObject();
-		int i = 0;
-		for(Map<String,Object> element: _resultSet) {
-			if(count_from <= i && i < count_to) {
-				for(Entry<String,Object> entry: element.entrySet()) {
-					Object object = entry.getValue();
-					jsonObject.put(entry.getKey(), object);
-				}
-			}
-			i++;
-		}
-
-		return jsonObject;
-	}
-
 }

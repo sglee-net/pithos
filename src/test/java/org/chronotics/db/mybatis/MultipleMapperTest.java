@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.chronotics.db.mybatis.SqlStatement.KEYWORD;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -185,8 +186,8 @@ public class MultipleMapperTest {
 		insert.add(TABLE1);
 		
 		sqlStatement.put(SqlStatement.INSERT, insert);
-		sqlStatement.put(SqlStatement.COLNAMES, colNames);
-		sqlStatement.put(SqlStatement.RECORDS, records);
+		sqlStatement.put(SqlStatement.KEYWORD.COLNAMES, colNames);
+		sqlStatement.put(SqlStatement.KEYWORD.RECORDS, records);
 		
 		return mapper.insertMultipleItems(sqlStatement);
 	}
@@ -235,8 +236,8 @@ public class MultipleMapperTest {
 			colValues.add(timestamp);
 			
 			sqlStatement.put(SqlStatement.INSERT, insert);
-			sqlStatement.put(SqlStatement.COLNAMES, colNames);
-			sqlStatement.put(SqlStatement.COLVALUES, colValues);
+			sqlStatement.put(SqlStatement.KEYWORD.COLNAMES, colNames);
+			sqlStatement.put(SqlStatement.KEYWORD.COLVALUES, colValues);
 			
 			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;

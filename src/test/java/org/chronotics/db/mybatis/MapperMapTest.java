@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.ibatis.session.SqlSession;
+import org.chronotics.db.mybatis.SqlStatement.KEYWORD;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -165,8 +166,8 @@ public class MapperMapTest {
 			colValues.add(timestamp);
 			
 			sqlStatement.put(SqlStatement.INSERT, insert);
-			sqlStatement.put(SqlStatement.COLNAMES, colNames);
-			sqlStatement.put(SqlStatement.COLVALUES, colValues);
+			sqlStatement.put(SqlStatement.KEYWORD.COLNAMES, colNames);
+			sqlStatement.put(SqlStatement.KEYWORD.COLVALUES, colValues);
 			
 			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;
