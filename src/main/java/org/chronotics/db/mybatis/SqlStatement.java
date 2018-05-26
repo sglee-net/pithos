@@ -420,10 +420,10 @@ public class SqlStatement {
 	}
 	
 	public static String getTableName(String _json) throws JSONException {
-		String rtString = null;
 		JSONObject jsonObject = new JSONObject(_json);
 		return (String)jsonObject.get(SqlStatement.KEYWORD.TABLENAME);
 	}
+	
 	public static Map<String, Object> getColVariables(String _json) throws JSONException {
 		Map<String, Object> rtObject = null;
 		JSONObject jsonObject = new JSONObject(_json);
