@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.chronotics.db.mybatis.SqlStatement.KEYWORD;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -89,7 +90,7 @@ public class SqlStatementBuilderTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.STATEMENT,statement);
+			sqlStatement.put(KEYWORD.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}
@@ -99,7 +100,7 @@ public class SqlStatementBuilderTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLENAME;
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.STATEMENT,statement);
+			sqlStatement.put(KEYWORD.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}

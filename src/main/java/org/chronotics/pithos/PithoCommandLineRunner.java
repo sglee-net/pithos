@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 
 import org.chronotics.db.mybatis.MapperMySql;
 import org.chronotics.db.mybatis.SqlStatement;
+import org.chronotics.db.mybatis.SqlStatement.COMMAND;
+import org.chronotics.db.mybatis.SqlStatement.KEYWORD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -129,7 +131,7 @@ public class PithoCommandLineRunner implements CommandLineRunner {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.STATEMENT,statement);
+			sqlStatement.put(KEYWORD.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}
@@ -139,7 +141,7 @@ public class PithoCommandLineRunner implements CommandLineRunner {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLENAME;
 			Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
-			sqlStatement.put(SqlStatement.STATEMENT,statement);
+			sqlStatement.put(KEYWORD.STATEMENT,statement);
 			mapper.doStatement(sqlStatement);
 		}
 	}

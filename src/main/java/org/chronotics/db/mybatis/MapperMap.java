@@ -58,7 +58,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public Map<String, Object> selectOne(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).selectOne(sqlStatement);
 	}
@@ -70,7 +70,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public List<Map<String,Object>> selectList(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).selectList(sqlStatement);
 	}
@@ -88,7 +88,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public int insert(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).insert(sqlStatement);
 	}
@@ -106,7 +106,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public int update(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).update(sqlStatement);
 	}
@@ -124,7 +124,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public int delete(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).delete(sqlStatement);
 	}
@@ -142,7 +142,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public int insertMultipleItems(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).insertMultipleItems(sqlStatement);
 	}
@@ -154,7 +154,7 @@ public class MapperMap implements IMapper {
 	}
 	
 	public int doStatement(
-			String key, SqlStatement sqlStatement) {
+			String key, SqlStatement sqlStatement) throws Exception {
 		if(get(key) == null) throw new NullPointerException();
 		return get(key).doStatement(sqlStatement);
 	}

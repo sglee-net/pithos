@@ -16,14 +16,16 @@ import org.json.JSONObject;
 
 public class SqlStatement {
 	public static class KEYWORD {
+		public static String TABLENAME = "tableName";
 		public static String RESULTSET = "resultSet";
 		public static String COLNAMES = "colNames";
 		public static String COLVALUES = "colValues";
+		public static String COLVARIABLES = "colVariables";
 		public static String RECORDS = "records";
+		public static String STATEMENT = "statement";
 	}
 	
-//	public static class COMMAND {
-		public static String STATEMENT = "statement";
+	public static class COMMAND {
 		public static String SELECT = "select";
 		public static String INSERT = "insert";
 		public static String UPDATE = "update";
@@ -46,7 +48,7 @@ public class SqlStatement {
 		public static String RIGHTJOIN = "rightJoin";
 		public static String FULLOUTERJOIN = "fullOuterJoin";
 		public static String ON = "on";
-//	}
+	}
 	
 	protected static Map<String, OPERATOR> operatorMap = new HashMap<String, OPERATOR>();
 	public static enum OPERATOR {
@@ -109,6 +111,7 @@ public class SqlStatement {
 		private List<Object> fromList = null;
 		private List<Object> insertList = null;
 		private List<Object> updateList = null;
+		private Map<String, Object> setMap = null;
 		private List<Object> deleteList = null;
 		private List<Object> whereList = null;
 		private Map<String,Object> whereMap = null;
@@ -122,7 +125,7 @@ public class SqlStatement {
 			SqlStatement sqlStatement = new SqlStatement();
 			if(whereMap != null) {
 				if(!whereMap.isEmpty()) {
-					sqlParameter.put(WHERECONDITION, whereMap);
+					sqlParameter.put(COMMAND.WHERECONDITION, whereMap);
 				}
 			}
 			
@@ -161,7 +164,7 @@ public class SqlStatement {
 				assert(e instanceof String);
 				selectList.add(e);
 			}
-			sqlParameter.put(SELECT, selectList);
+			sqlParameter.put(COMMAND.SELECT, selectList);
 			return this;
 		}
 		
@@ -171,7 +174,7 @@ public class SqlStatement {
 			}
 			fromList.clear();
 			fromList.add(object);
-			sqlParameter.put(FROM, fromList);
+			sqlParameter.put(COMMAND.FROM, fromList);
 			return this;
 		}
 		
@@ -181,7 +184,7 @@ public class SqlStatement {
 			}
 			insertList.clear();
 			insertList.add(object);
-			sqlParameter.put(INSERT, insertList);
+			sqlParameter.put(COMMAND.INSERT, insertList);
 			return this;
 		}
 		
@@ -191,7 +194,32 @@ public class SqlStatement {
 			}
 			updateList.clear();
 			updateList.add(object);
-			sqlParameter.put(UPDATE, updateList);
+			sqlParameter.put(COMMAND.UPDATE, updateList);
+			return this;
+		}
+		
+		public Builder set(
+				String name,
+				Object value) {
+			if(setMap == null) {
+				setMap = new LinkedHashMap<String,Object>();
+			}
+			assert(setMap.size()==0);
+			setMap.clear();
+			setMap.put(name, value);
+			sqlParameter.put(COMMAND.SET, setMap);
+			return this;
+		}
+		
+		public Builder set(
+				Map<String, Object> variableMap) {
+			if(setMap == null) {
+				setMap = new LinkedHashMap<String,Object>();
+			}
+			assert(setMap.size()==0);
+			setMap.clear();
+			setMap.putAll(variableMap);
+			sqlParameter.put(COMMAND.SET, setMap);
 			return this;
 		}
 		
@@ -201,7 +229,7 @@ public class SqlStatement {
 			}
 			deleteList.clear();
 			deleteList.add(object);
-			sqlParameter.put(DELETE, deleteList);
+			sqlParameter.put(COMMAND.DELETE, deleteList);
 			return this;
 		}
 		
@@ -240,10 +268,10 @@ public class SqlStatement {
 			this.addObjectToWhereList(leftOperand);
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
-			assert(whereMap.get(WHERE) == null);
-			assert(whereMap.get(WHERENOT) == null);
+			assert(whereMap.get(COMMAND.WHERE) == null);
+			assert(whereMap.get(COMMAND.WHERENOT) == null);
 			
-			whereMap.put(WHERE, whereList);
+			whereMap.put(COMMAND.WHERE, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -257,10 +285,10 @@ public class SqlStatement {
 			this.addObjectToWhereList(leftOperand);
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
-			assert(whereMap.get(WHERE) == null);
-			assert(whereMap.get(WHERENOT) == null);
+			assert(whereMap.get(COMMAND.WHERE) == null);
+			assert(whereMap.get(COMMAND.WHERENOT) == null);
 			
-			whereMap.put(WHERENOT, whereList);
+			whereMap.put(COMMAND.WHERENOT, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -275,7 +303,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(AND, whereList);
+			whereMap.put(COMMAND.AND, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -290,7 +318,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(ANDNOT, whereList);
+			whereMap.put(COMMAND.ANDNOT, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -305,7 +333,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(OR, whereList);
+			whereMap.put(COMMAND.OR, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -320,7 +348,7 @@ public class SqlStatement {
 			this.addObjectToWhereList(operator);
 			this.addObjectToWhereList(rightOperand);
 			
-			whereMap.put(ORNOT, whereList);
+			whereMap.put(COMMAND.ORNOT, whereList);
 			// don't clear
 			//this.clearWhereList();
 			return this;
@@ -391,6 +419,32 @@ public class SqlStatement {
 		return object;
 	}
 	
+	public static String getTableName(String _json) throws JSONException {
+		String rtString = null;
+		JSONObject jsonObject = new JSONObject(_json);
+		return (String)jsonObject.get(SqlStatement.KEYWORD.TABLENAME);
+	}
+	public static Map<String, Object> getColVariables(String _json) throws JSONException {
+		Map<String, Object> rtObject = null;
+		JSONObject jsonObject = new JSONObject(_json);
+		Object obj = jsonObject.get(SqlStatement.KEYWORD.COLVARIABLES);
+		if(obj instanceof JSONArray == false) {
+			throw new JSONException("There is no SqlStatement.COLVARIABLES");
+		}
+		rtObject = new LinkedHashMap<String, Object>();
+		JSONArray array = (JSONArray)obj;
+		for(int i=0; i<array.length(); i++) {
+			JSONObject element = (JSONObject) array.get(i);
+			@SuppressWarnings("unchecked")
+			java.util.Iterator<String> iterator = element.keys();
+			while(iterator.hasNext()) {
+				String name = iterator.next();
+				rtObject.put(name, element.get(name));
+			}
+		}
+		return rtObject;
+	}
+	
 	public static List<Object> getColNames(String _json) throws JSONException {
 		List<Object> rtObject = null;
 		JSONObject jsonObject = new JSONObject(_json);
@@ -444,6 +498,14 @@ public class SqlStatement {
 		return rtObject;
 	}
 	
+	/**
+	 * 
+	 * @param _resultSet
+	 * @param count_from
+	 * if(count_from <= i && i < count_to)
+	 * @param count_to
+	 * @return
+	 */
 	public static JSONObject getJSonObject(
 			List<Map<String,Object>> _resultSet, 
 			int count_from, 

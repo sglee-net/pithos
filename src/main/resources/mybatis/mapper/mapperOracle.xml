@@ -400,10 +400,9 @@
 	DELETE ${statement}
   </delete>
   
-  <!-- have to modify -->
- <!--  <insert id="insertMultipleItems" parameterType="map">
-  example
-    
+  <insert id="insertMultipleItems" parameterType="map">
+  <!-- example -->
+  <!--   
 	INSERT INTO #{tableName}
     (
     #{colName},
@@ -422,13 +421,13 @@
     #{colValue}
     )
     )
- 
-	List
+  -->
+	<!-- List -->
 	<foreach index="index" item="item" collection="insert" open="" separator="" close="">
 		<if test = "index == 0">INSERT INTO <if test = "item != null">${item}</if> </if>
     </foreach>
     (
-    List
+    <!-- List -->
     <foreach index="index" item="item" collection="colNames" open="" separator="," close="">
     	<if test = "item != null">
     		${item}
@@ -436,13 +435,13 @@
     </foreach>
     )
     VALUES
-    List
+    <!-- List -->
 	<foreach index="index" item="item" collection="records" open="" separator="," close="">
  		<foreach index="index" item="item" collection="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</foreach>
-  </insert> -->
+  </insert>
   
   <update id="doStatement" parameterType="map">
 	${statement}

@@ -46,7 +46,7 @@ public interface IMapper {
 	 */
 	public Map<String,Object> selectOne(Map<Object,Object> parameter);
 	
-	public Map<String,Object> selectOne(SqlStatement sqlStatement);
+	public Map<String,Object> selectOne(SqlStatement sqlStatement) throws Exception;
 	
 	/**
 	 * selectList
@@ -61,7 +61,7 @@ public interface IMapper {
 	 */
 	public List<Map<String,Object>> selectList(Map<Object,Object> parameter);
 	
-	public List<Map<String,Object>> selectList(SqlStatement sqlStatement);
+	public List<Map<String,Object>> selectList(SqlStatement sqlStatement) throws Exception;
 
 	/**
 	 * selectWithStatement
@@ -88,7 +88,7 @@ public interface IMapper {
 	 */
 	public int insert(Map<Object,Object> parameter);
 	
-	public int insert(SqlStatement sqlStatement);
+	public int insert(SqlStatement sqlStatement) throws Exception;
 	
 	/**
 	 * insertWithStatement
@@ -113,7 +113,7 @@ public interface IMapper {
 	 */
 	public int update(Map<Object,Object> parameter);
 	
-	public int update(SqlStatement sqlStatement);
+	public int update(SqlStatement sqlStatement) throws Exception;
 	
 	/**
 	 * insertWithStatement
@@ -138,7 +138,7 @@ public interface IMapper {
 	 */
 	public int delete(Map<Object,Object> parameter);
 	
-	public int delete(SqlStatement sqlStatement);
+	public int delete(SqlStatement sqlStatement) throws Exception;
 	
 	/**
 	 * deletedWithStatement
@@ -170,7 +170,7 @@ public interface IMapper {
 	 * @return
 	 * the number of inserted elements
 	 */
-	public int insertMultipleItems(SqlStatement sqlStatement);
+	public int insertMultipleItems(SqlStatement sqlStatement) throws Exception;
 	
 	/**
 	 * doStatement
@@ -182,6 +182,6 @@ public interface IMapper {
 	 */
 	public int doStatement(Map<Object,Object> parameters);
 	
-	public int doStatement(SqlStatement sqlStatement);
+	public int doStatement(SqlStatement sqlStatement) throws Exception;
 
 }

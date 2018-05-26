@@ -1,7 +1,6 @@
 package org.chronotics.db.mybatis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -12,7 +11,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.chronotics.db.mybatis.SqlStatement.COMMAND;
 import org.chronotics.db.mybatis.SqlStatement.KEYWORD;
+import org.chronotics.db.mybatis.SqlStatement.OPERATOR;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +25,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {org.chronotics.pithos.Application.class})
 public class MultipleMapperTest {
+	
+	@Rule
+	public ExpectedException exceptions = ExpectedException.none();
+	
+	@Resource(name = "mapperSimpleMySql")
+	private MapperMySql mapperMySql;
+	
+	@Resource(name = "mapperSimpleOracle")
+	private MapperOracle mapperOracle;
+
 	// table name
 	public static String TABLE1 = "table1";
 			
@@ -115,7 +126,7 @@ public class MultipleMapperTest {
 			"	PRIMARY KEY (c0)" + 
 			");";
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-			queryParameter.put(SqlStatement.STATEMENT,statement);
+			queryParameter.put(KEYWORD.STATEMENT,statement);
 			mapperMySql.doStatement(queryParameter);
 		}
 
@@ -135,7 +146,7 @@ public class MultipleMapperTest {
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-			queryParameter.put(SqlStatement.STATEMENT,statement);
+			queryParameter.put(KEYWORD.STATEMENT,statement);
 			mapperMySql.doStatement(queryParameter);
 		}
 	}
@@ -185,9 +196,9 @@ public class MultipleMapperTest {
 		List<Object> insert = new ArrayList<Object>();
 		insert.add(TABLE1);
 		
-		sqlStatement.put(SqlStatement.INSERT, insert);
-		sqlStatement.put(SqlStatement.KEYWORD.COLNAMES, colNames);
-		sqlStatement.put(SqlStatement.KEYWORD.RECORDS, records);
+		sqlStatement.put(COMMAND.INSERT, insert);
+		sqlStatement.put(KEYWORD.COLNAMES, colNames);
+		sqlStatement.put(KEYWORD.RECORDS, records);
 		
 		return mapper.insertMultipleItems(sqlStatement);
 	}
@@ -235,9 +246,9 @@ public class MultipleMapperTest {
 			colValues.add(time);
 			colValues.add(timestamp);
 			
-			sqlStatement.put(SqlStatement.INSERT, insert);
-			sqlStatement.put(SqlStatement.KEYWORD.COLNAMES, colNames);
-			sqlStatement.put(SqlStatement.KEYWORD.COLVALUES, colValues);
+			sqlStatement.put(COMMAND.INSERT, insert);
+			sqlStatement.put(KEYWORD.COLNAMES, colNames);
+			sqlStatement.put(KEYWORD.COLVALUES, colValues);
 			
 			int count = mapper.insert(sqlStatement);
 			totalInsertion += count;
@@ -245,15 +256,6 @@ public class MultipleMapperTest {
 		
 		return totalInsertion; 
 	}
-	
-	@Rule
-	public ExpectedException exceptions = ExpectedException.none();
-	
-	@Resource(name = "mapperSimpleMySql")
-	private MapperMySql mapperMySql;
-	
-	@Resource(name = "mapperSimpleOracle")
-	private MapperOracle mapperOracle;
 	
 	@BeforeClass
 	public static void setup() {
@@ -299,14 +301,14 @@ public class MultipleMapperTest {
 						
 			List<Object> where = new ArrayList<Object>();
 			where.add(CSTR1);
-			where.add(SqlStatement.OPERATOR.EQ);
+			where.add(OPERATOR.EQ);
 			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.WHERE, where);
+			whereCondition.put(COMMAND.WHERE, where);
 			
-			queryParameter.put(SqlStatement.SELECT, select);
-			queryParameter.put(SqlStatement.FROM, from);
-			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
+			queryParameter.put(COMMAND.SELECT, select);
+			queryParameter.put(COMMAND.FROM, from);
+			queryParameter.put(COMMAND.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);
@@ -327,14 +329,14 @@ public class MultipleMapperTest {
 						
 			List<Object> where = new ArrayList<Object>();
 			where.add(CSTR1);
-			where.add(SqlStatement.OPERATOR.EQ);
+			where.add(OPERATOR.EQ);
 			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
-			whereCondition.put(SqlStatement.WHERE, where);
+			whereCondition.put(COMMAND.WHERE, where);
 			
-			queryParameter.put(SqlStatement.SELECT, select);
-			queryParameter.put(SqlStatement.FROM, from);
-			queryParameter.put(SqlStatement.WHERECONDITION, whereCondition);
+			queryParameter.put(COMMAND.SELECT, select);
+			queryParameter.put(COMMAND.FROM, from);
+			queryParameter.put(COMMAND.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
 					mapper.selectList(queryParameter);

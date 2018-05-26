@@ -19,25 +19,20 @@ import org.springframework.stereotype.Repository;
  * One is simple, the other is batch
  */
 @Repository("mapperOracle")
-public class MapperOracle implements IMapper {
+public class MapperOracle extends Mapper {
 
 	private String className = this.getClass().getName();
 	public String getClassName() {
 		return className;
 	}
 	
-	@Resource(name = "sqlSessionSimpleOracle")
+	@Resource(name = "sqlSessionSimpleMySql")
 	private SqlSession sqlSession;
 	
 	public SqlSession getSqlSession() {
 		return sqlSession;
 	}
-	
-	/**
-	 * setSqlSession
-	 * for DI injection
-	 * @param _sqlSession
-	 */
+
 	public void setSqlSession(SqlSession _sqlSession) {
 		sqlSession = _sqlSession;
 	}
@@ -50,7 +45,8 @@ public class MapperOracle implements IMapper {
 	}
 	
 	@Override
-	public Map<String, Object> selectOne(SqlStatement sqlStatement) {
+	public Map<String, Object> selectOne(SqlStatement sqlStatement) throws Exception {
+		super.selectOne(sqlStatement);
 		return getSqlSession().selectOne(
 				getClassName() + ".selectOne",
 				sqlStatement.getParameter());
@@ -64,7 +60,8 @@ public class MapperOracle implements IMapper {
 	}
 	
 	@Override
-	public List<Map<String,Object>> selectList(SqlStatement sqlStatement) {
+	public List<Map<String,Object>> selectList(SqlStatement sqlStatement) throws Exception {
+		super.selectList(sqlStatement);
 		return getSqlSession().selectList(
 				getClassName() + ".selectList",
 				sqlStatement.getParameter());
@@ -83,7 +80,8 @@ public class MapperOracle implements IMapper {
 	}
 
 	@Override
-	public int insert(SqlStatement sqlStatement) {
+	public int insert(SqlStatement sqlStatement) throws Exception {
+		super.insert(sqlStatement);
 		return getSqlSession().insert(
 				getClassName() + ".insert",
 				sqlStatement.getParameter());
@@ -102,7 +100,8 @@ public class MapperOracle implements IMapper {
 	}
 	
 	@Override
-	public int update(SqlStatement sqlStatement) {
+	public int update(SqlStatement sqlStatement) throws Exception {
+		super.update(sqlStatement);
 		return getSqlSession().update(
 				getClassName() + ".update",
 				sqlStatement.getParameter());
@@ -121,7 +120,8 @@ public class MapperOracle implements IMapper {
 	}
 	
 	@Override
-	public int delete(SqlStatement sqlStatement) {
+	public int delete(SqlStatement sqlStatement) throws Exception {
+		super.delete(sqlStatement);
 		return getSqlSession().delete(
 				getClassName() + ".delete", 
 				sqlStatement.getParameter());
@@ -140,7 +140,8 @@ public class MapperOracle implements IMapper {
 	}
 	
 	@Override
-	public int insertMultipleItems(SqlStatement sqlStatement) {
+	public int insertMultipleItems(SqlStatement sqlStatement) throws Exception {
+		super.insertMultipleItems(sqlStatement);
 		return getSqlSession().insert(
 				getClassName() + ".insertMultipleItems", //sqlstatement.getMapperStatement(),
 				sqlStatement.getParameter());
@@ -154,7 +155,8 @@ public class MapperOracle implements IMapper {
 	}
 
 	@Override
-	public int doStatement(SqlStatement sqlStatement) {
+	public int doStatement(SqlStatement sqlStatement) throws Exception {
+		super.doStatement(sqlStatement);
 		return getSqlSession().update(
 				getClassName() + ".doStatement", 
 				sqlStatement.getParameter());
