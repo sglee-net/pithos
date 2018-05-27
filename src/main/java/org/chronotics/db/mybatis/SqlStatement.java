@@ -233,7 +233,11 @@ public class SqlStatement {
 			return this;
 		}
 		
-		public void addObjectToWhereList(Object object) {
+		private void addStatementToWhereList(String statement) {
+			whereList.add(statement);
+		}
+		
+		private void addObjectToWhereList(Object object) {
 			if(object instanceof List) {
 				if(object instanceof Builder) {
 					this.addObjectToWhereList("(");
@@ -249,8 +253,26 @@ public class SqlStatement {
 			}
 		}
 		
-		public void clearWhereList() {
+		private void clearWhereList() {
 			whereList.clear();
+		}
+		
+		public Builder where(
+				String statement) {
+			if(whereList == null) {
+				whereList = new ArrayList<Object>();
+			}
+			if(whereMap == null) {
+				whereMap = new LinkedHashMap<String,Object>();
+			}
+			this.clearWhereList();
+			this.addStatementToWhereList(statement);
+			assert(whereMap.get(COMMAND.WHERE) == null);
+			assert(whereMap.get(COMMAND.WHERENOT) == null);
+			whereMap.put(COMMAND.WHERE, whereList);
+			// don't clear
+			//this.clearWhereList();
+			return this;
 		}
 		
 		public Builder where(
