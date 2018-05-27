@@ -22,6 +22,7 @@ public class SqlStatement {
 		public static String COLVALUES = "colValues";
 		public static String COLVARIABLES = "colVariables";
 		public static String RECORDS = "records";
+		public static String WHERECLAUSE = "whereClause";
 		public static String STATEMENT = "statement";
 	}
 	
@@ -233,8 +234,8 @@ public class SqlStatement {
 			return this;
 		}
 		
-		private void addStatementToWhereList(String statement) {
-			whereList.add(statement);
+		private void addClauseToWhereList(String clause) {
+			whereList.add(clause);
 		}
 		
 		private void addObjectToWhereList(Object object) {
@@ -258,7 +259,7 @@ public class SqlStatement {
 		}
 		
 		public Builder where(
-				String statement) {
+				String clause) {
 			if(whereList == null) {
 				whereList = new ArrayList<Object>();
 			}
@@ -266,7 +267,7 @@ public class SqlStatement {
 				whereMap = new LinkedHashMap<String,Object>();
 			}
 			this.clearWhereList();
-			this.addStatementToWhereList(statement);
+			this.addClauseToWhereList(clause);
 			assert(whereMap.get(COMMAND.WHERE) == null);
 			assert(whereMap.get(COMMAND.WHERENOT) == null);
 			whereMap.put(COMMAND.WHERE, whereList);
@@ -444,6 +445,11 @@ public class SqlStatement {
 	public static String getTableName(String _json) throws JSONException {
 		JSONObject jsonObject = new JSONObject(_json);
 		return (String)jsonObject.get(SqlStatement.KEYWORD.TABLENAME);
+	}
+	
+	public static String getWhereClause(String _json) throws JSONException {
+		JSONObject jsonObject = new JSONObject(_json);
+		return (String)jsonObject.get(SqlStatement.KEYWORD.WHERECLAUSE);
 	}
 	
 	public static Map<String, Object> getColVariables(String _json) throws JSONException {
