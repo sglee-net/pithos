@@ -423,24 +423,27 @@
     )
   -->
 	<!-- List -->
-	<foreach index="index" item="item" collection="insert" open="" separator="" close="">
-		<if test = "index == 0">INSERT INTO <if test = "item != null">${item}</if> </if>
+ 	<foreach index="index" item="item" collection="insert" open="" separator="" close="">
+		<if test = "index == 0"> <if test = "item != null"><bind name="tableName" value="item" /></if> </if>
+		
     </foreach>
-    (
+    
+    INSERT ALL
+    <bind name="colNamesBind" value="colNames" />
     <!-- List -->
-    <foreach index="index" item="item" collection="colNames" open="" separator="," close="">
-    	<if test = "item != null">
-    		${item}
-    	</if>
-    </foreach>
-    )
-    VALUES
-    <!-- List -->
-	<foreach index="index" item="item" collection="records" open="" separator="," close="">
+	<foreach index="index" item="item" collection="records" open="" separator=" " close="">
+		INTO ${tableName}
+		<foreach index="index" item="subItem" collection="colNamesBind" open="(" separator="," close=")">
+	    	<if test = "subItem != null">
+	    		${subItem}
+	    	</if>
+    	</foreach>
+    	VALUES
  		<foreach index="index" item="item" collection="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</foreach>
+	SELECT 1 FROM DUAL
   </insert>
   
   <update id="doStatement" parameterType="map">
