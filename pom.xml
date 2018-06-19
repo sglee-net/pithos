@@ -19,31 +19,16 @@
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <scope>test</scope>
-<!-- 	    <exclusions>
-	        <exclusion>
-	            <groupId>org.hamcrest</groupId>
-	            <artifactId>hamcrest-core</artifactId>
-	        </exclusion>
-	    </exclusions> -->
 	</dependency>
-	
-<!-- 	<dependency>
-	    <groupId>org.slf4j</groupId>
-	    <artifactId>slf4j-simple</artifactId>
- 	    <version>RELEASE</version>
-    </dependency>
- -->    		
-    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+
 	<dependency>
 	    <groupId>org.slf4j</groupId>
 	    <artifactId>slf4j-api</artifactId>
-	    <version>1.7.25</version>
 	</dependency>
     		
 	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-beans</artifactId>
-<!-- 		<version>${springframework.version}</version> -->
 	</dependency>
 
 	<dependency>
@@ -95,7 +80,6 @@
 	<dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-data-rest</artifactId>
-<!-- 	    <version>2.0.0.RELEASE</version> -->
 	</dependency>
 
 	<dependency>
@@ -130,24 +114,6 @@
 	    <version>11.2.0.4</version>
 	    <scope>test</scope>
 	</dependency>
-
-<!-- 	<dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-databind</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-core</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-annotations</artifactId>
-	</dependency>
-	
-	<dependency>
-	    <groupId>com.google.code.gson</groupId>
-	    <artifactId>gson</artifactId>
-	</dependency> -->
 	
   </dependencies>
 
