@@ -1,7 +1,6 @@
 package org.chronotics.db.mybatis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +24,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {org.chronotics.pithos.Application.class})
 public class MapperMapTest {
-	public static String SESSION_ORACLE = "mapperSimpleOracle";
-	public static String SESSION_MYSQL = "mapperSimpleMySql";
 	
+	@Rule
+	public ExpectedException exceptions = ExpectedException.none();
+	
+//	@Resource(name = "mapperSimpleMySql")
+//	private MapperMySql mapperMySql;
+//	
+//	@Resource(name = "mapperSimpleOracle")
+//	private MapperOracle mapperOracle;
+	
+	@Resource(name = "mapperMap")
+	private MapperMap mapperMap;
+
 	// table name
 	public static String TABLE1 = "table1";
 			
@@ -43,45 +52,73 @@ public class MapperMapTest {
 	public static String CTIME = "c8";
 	public static String CTIMESTAMP = "c9";
 	
-	@Rule
-	public ExpectedException exceptions = ExpectedException.none();
-	
-	@Resource(name = "mapperMap")
-	private MapperMap mapper;
-
-	// for Table1
-	public static List<Map<String,Object>> itemSet1 = 
+	public static List<Map<String,Object>> itemSetMySql = 
 			new ArrayList<Map<String,Object>>();
+	public static List<Map<String,Object>> itemSetOracle = 
+			new ArrayList<Map<String,Object>>();
+
 	public static int itemCount = 100;
-	
-	private void createTables() {
-		dropTables();
+	private void createOracleTables() {
+		IMapper mapperOracle = mapperMap.get("mapperSimpleOracle");
 		
-//		// Oracle
-//		{
-//			String key = SESSION_ORACLE;
-//			String statement=
-//			"CREATE TABLE "+ TABLE1 +" (" + 
-//			"	c0 BIGINT(20) unsigned NOT NULL AUTO_INCREMENT," + 
-//			"	c1 VARCHAR(255) NULL," + 
-//			"	c2 VARCHAR(255) NULL," + 
-//			"	c3 FLOAT NULL default '0'," + 
-//			"	c4 VARBINARY(255) NULL," + 
-//			"	c5 BLOB NULL," + 
-//			"	c6 TEXT NULL," + 
-//			"	c7 DATE NULL," + 
-//			"	c8 TIME NULL," + 
-//			"	c9 TIMESTAMP NULL," + 
-//			"	PRIMARY KEY (c0)" + 
-//			");";
-//			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-//			queryParameter.put(SqlStatement.statement,statement);
-//			mapper.doStatement(key, queryParameter);
-//		}
-		
-		// MySQL
+		dropOracleTables();
 		{
-			String key = SESSION_MYSQL;
+			String statement = 
+					"DROP SEQUENCE TABLE1_SEQUENCE ";
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			queryParameter.put(KEYWORD.STATEMENT,statement);
+			try {
+				mapperOracle.doStatement(queryParameter);
+			} catch (Exception e) {
+				
+			}
+		}	
+		{
+			String statement = 
+					"CREATE SEQUENCE TABLE1_SEQUENCE START WITH 1 ";
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			queryParameter.put(KEYWORD.STATEMENT,statement);
+			mapperOracle.doStatement(queryParameter);
+		}	
+		{
+			String statement = 
+					"CREATE TABLE " + TABLE1 
+					+ " ( c0 NUMBER(10) NOT NULL, "
+					+ "c1 VARCHAR2(255) NULL, "
+					+ "c2 VARCHAR2(255) NULL, "
+					+ "c3 NUMBER(10,3) NULL, "
+					+ "c4 BFILE NULL, "
+					+ "c5 BLOB NULL, "
+					+ "c6 CLOB NULL, "
+					+ "c7 DATE NULL, "
+					+ "c8 DATE NULL, "
+					+ "c9 TIMESTAMP(6) NULL,"
+					+ "CONSTRAINT TABLE1_PK PRIMARY KEY (c0) ENABLE ) ";
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			queryParameter.put(KEYWORD.STATEMENT,statement);
+			mapperOracle.doStatement(queryParameter);
+		}
+	}
+	
+	private void dropOracleTables() {
+		IMapper mapperOracle = mapperMap.get("mapperSimpleOracle");
+		{
+			String statement=
+			"DROP TABLE " + TABLE1;
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			queryParameter.put(KEYWORD.STATEMENT,statement);
+			try {
+				mapperOracle.doStatement(queryParameter);
+			} catch (Exception e) {
+				
+			}
+		}
+	}
+	
+	private void createMySqlTables() {
+		IMapper mapperMySql = mapperMap.get("mapperSimpleMySql");
+		dropMySqlTables();
+		{
 			String statement=
 			"CREATE TABLE "+ TABLE1 +" (" + 
 			"	c0 BIGINT(20) unsigned NOT NULL AUTO_INCREMENT," + 
@@ -98,35 +135,195 @@ public class MapperMapTest {
 			");";
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
 			queryParameter.put(KEYWORD.STATEMENT,statement);
-			mapper.doStatement(key, queryParameter);
+			mapperMySql.doStatement(queryParameter);
 		}
+
 	}
 	
-	private void dropTables() {
-//		{
-//			String key = SESSION_ORACLE;
-//			String statement=
-//			"DROP TABLE IF EXISTS " + TABLE1;
-//			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
-//			queryParameter.put(SqlStatement.statement,statement);
-//			mapper.doStatement(key, queryParameter);
-//		}
-		
+	private void dropMySqlTables() {
+		IMapper mapperMySql = mapperMap.get("mapperSimpleMySql");
 		{
-			String key = SESSION_MYSQL;
 			String statement=
 			"DROP TABLE IF EXISTS " + TABLE1;
 			Map<Object,Object> queryParameter = new HashMap<Object,Object>();
 			queryParameter.put(KEYWORD.STATEMENT,statement);
-			mapper.doStatement(key, queryParameter);
+			mapperMySql.doStatement(queryParameter);
 		}
 	}
-
-	private int insertItemsOneByOne(IMapper mapper) throws Exception {
+	
+	private int insertMultipleOracleItems() {
+		IMapper mapperOracle = mapperMap.get("mapperSimpleOracle");
+		List<Map<String,Object>> itemSet = itemSetOracle;
+		
+		Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+		
+		List<Object> insert = new ArrayList<Object>();
+		insert.add(TABLE1);
+		
+		List<Object> colNames = new ArrayList<Object>();
+		colNames.add(CID);
+		colNames.add(CSTR1);
+		colNames.add(CSTR2);
+		colNames.add(CNUMBER);
+		// binary
+		// blob
+		// clob
+		colNames.add(CDATE);
+		colNames.add(CTIME);
+		colNames.add(CTIMESTAMP);
+		
+		List<Object> records = new ArrayList<Object>();
+		for(Map<String,Object> entry : itemSet) {
+			List<Object> variables = new ArrayList<Object>();
+			Object id = entry.get(CID);
+			String str1 = (String) entry.get(CSTR1);
+			String str2 = (String) entry.get(CSTR2);
+			Object number = entry.get(CNUMBER);
+			// binary
+			// blob
+			// clob
+			Object date = entry.get(CDATE);
+			Object time = entry.get(CTIME);
+			Object timestamp = entry.get(CTIMESTAMP);
+			
+			variables.add(id);
+			variables.add(str1);
+			variables.add(str2);
+			variables.add(number);
+			// binary
+			// blob
+			// clob
+			variables.add(date);
+			variables.add(time);
+			variables.add(timestamp);
+			
+			records.add(variables);
+		}
+		
+		queryParameter.put(COMMAND.INSERT, insert);
+		queryParameter.put(KEYWORD.COLNAMES, colNames);
+		queryParameter.put(KEYWORD.RECORDS, records);
+		
+		return mapperOracle.insertMultipleItems(queryParameter);
+	}
+	
+	private int insertOracleItemsOneByOne() {
+		IMapper mapperOracle = mapperMap.get("mapperSimpleOracle");
+		List<Map<String,Object>> itemSet = itemSetOracle;
 		
 		int totalInsertion = 0;
 		// insert
-		for(Map<String,Object> entry : itemSet1) {
+		for(Map<String,Object> entry : itemSet) {
+			Object id = entry.get(CID);
+			String str1 = (String) entry.get(CSTR1);
+			String str2 = (String) entry.get(CSTR2);
+			Object number = entry.get(CNUMBER);
+			// binary
+			// blob
+			// clob
+			Object date = entry.get(CDATE);
+			Object time = entry.get(CTIME);
+			Object timestamp = entry.get(CTIMESTAMP);
+			
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			
+			List<Object> insert = new ArrayList<Object>();
+			insert.add(TABLE1);
+			
+			List<Object> colNames = new ArrayList<Object>();
+			colNames.add(CID);
+			colNames.add(CSTR1);
+			colNames.add(CSTR2);
+			colNames.add(CNUMBER);
+			// binary
+			// blob
+			// clob
+			colNames.add(CDATE);
+			colNames.add(CTIME);
+			colNames.add(CTIMESTAMP);
+			
+			List<Object> colValues = new ArrayList<Object>();
+			colValues.add(id);
+			colValues.add(str1);
+			colValues.add(str2);
+			colValues.add(number);
+			// binary
+			// blob
+			// clob
+			colValues.add(date);
+			colValues.add(time);
+			colValues.add(timestamp);
+			
+			queryParameter.put(COMMAND.INSERT, insert);
+			queryParameter.put(KEYWORD.COLNAMES, colNames);
+			queryParameter.put(KEYWORD.COLVALUES, colValues);
+
+			int count = mapperOracle.insert(queryParameter);
+			totalInsertion += count;
+		}
+		
+		return totalInsertion; 
+	}
+
+	private int insertMultipleMySqlItems() {
+		IMapper mapperMySql = mapperMap.get("mapperSimpleMySql");
+		
+		List<Object> colNames = new ArrayList<Object>();
+		colNames.add(CSTR1);
+		colNames.add(CSTR2);
+		colNames.add(CNUMBER);
+		// binary
+		// blob
+		// clob
+		colNames.add(CDATE);
+		colNames.add(CTIME);
+		colNames.add(CTIMESTAMP);
+		
+		List<List<Object>> records = new ArrayList<List<Object>>();
+		for(Map<String,Object> entry : itemSetMySql) {
+			List<Object> variables = new ArrayList<Object>();
+			
+			String str1 = (String) entry.get(CSTR1);
+			String str2 = (String) entry.get(CSTR2);
+			Object number = entry.get(CNUMBER);
+			// binary
+			// blob
+			// clob
+			Object date = entry.get(CDATE);
+			Object time = entry.get(CTIME);
+			Object timestamp = entry.get(CTIMESTAMP);
+						
+			variables.add(str1);
+			variables.add(str2);
+			variables.add(number);
+			// binary
+			// blob
+			// clob
+			variables.add(date);
+			variables.add(time);
+			variables.add(timestamp);
+			
+			records.add(variables);
+		}
+		
+		Map<Object,Object> sqlStatement = new LinkedHashMap<Object,Object>();
+		
+		List<Object> insert = new ArrayList<Object>();
+		insert.add(TABLE1);
+		
+		sqlStatement.put(COMMAND.INSERT, insert);
+		sqlStatement.put(KEYWORD.COLNAMES, colNames);
+		sqlStatement.put(KEYWORD.RECORDS, records);
+		
+		return mapperMySql.insertMultipleItems(sqlStatement);
+	}
+	
+	private int insertMySqlItemsOneByOne() {
+		IMapper mapperMySql = mapperMap.get("mapperSimpleMySql");
+		
+		int totalInsertion = 0;
+		// insert
+		for(Map<String,Object> entry : itemSetMySql) {
 			String str1 = (String) entry.get(CSTR1);
 			String str2 = (String) entry.get(CSTR2);
 			Object number = entry.get(CNUMBER);
@@ -169,7 +366,7 @@ public class MapperMapTest {
 			sqlStatement.put(KEYWORD.COLNAMES, colNames);
 			sqlStatement.put(KEYWORD.COLVALUES, colValues);
 			
-			int count = mapper.insert(sqlStatement);
+			int count = mapperMySql.insert(sqlStatement);
 			totalInsertion += count;
 		}
 		
@@ -180,7 +377,7 @@ public class MapperMapTest {
 	public static void setup() {
 		for(int i=0; i<itemCount; i++) {
 			Map<String,Object> item = 
-					new LinkedHashMap<String,Object>();
+					new HashMap<String,Object>();
 			item.put(CSTR1, Integer.toString(i));
 			item.put(CSTR2, Integer.toString(i));
 			item.put(CNUMBER, (double)i);
@@ -190,97 +387,113 @@ public class MapperMapTest {
 			item.put(CDATE, new java.sql.Date(new java.util.Date().getTime()));
 			item.put(CTIME, new java.sql.Time(new java.util.Date().getTime()));
 			item.put(CTIMESTAMP, new java.sql.Timestamp(new java.util.Date().getTime()));
-			itemSet1.add(item);
+			itemSetMySql.add(item);
+		}
+		
+		for(int i=0; i<itemCount; i++) {
+			Map<String,Object> item = 
+					new LinkedHashMap<String,Object>();
+			item.put(CID,i);
+			item.put(CSTR1, Integer.toString(i));
+			item.put(CSTR2, Integer.toString(i));
+			item.put(CNUMBER, (double)i);
+			// BINARY
+			// BLOB
+			// CLOB
+			item.put(CDATE, new java.sql.Date(new java.util.Date().getTime()));
+			item.put(CTIME, new java.sql.Date(new java.util.Date().getTime()));
+			item.put(CTIMESTAMP, new java.sql.Timestamp(new java.util.Date().getTime()));
+			itemSetOracle.add(item);
 		}
 	}
 	
 	@Test
-	public void insertSelectTest() throws Exception {
-	
-		assertTrue(mapper != null);
+	public void testInsertSelectOracle() {
+		IMapper mapperOracle = mapperMap.get("mapperSimpleOracle");
+		int resultCount = 0;
+		createOracleTables();		
 		
-		MapperMap mapperMap = (MapperMap)mapper;
-		if(mapperMap.size() == 0) {
-			System.out.println("map is empty");
-			assertTrue(mapperMap.size() != 0 );
-			return;
-		}
+		resultCount = this.insertOracleItemsOneByOne();
+		assertEquals(itemCount, resultCount);
 		
-		createTables();
+		dropOracleTables();
+		createOracleTables();
 		
-		this.insertItemsOneByOne(mapper.get(SESSION_MYSQL));
-		this.insertItemsOneByOne(mapper.get(SESSION_ORACLE));
-			
+		resultCount = this.insertMultipleOracleItems();
+		assertEquals(itemCount, resultCount);
+		
+		
 		// select
-		{
-			String key = SESSION_MYSQL;
-			Map<Object,Object> queryParameterSelect = new LinkedHashMap<Object,Object>();
-				
+		for(int i=0; i<itemCount; i++){
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			
 			List<Object> select = new ArrayList<Object>();
 			select.add("*");
-			
+
 			List<Object> from = new ArrayList<Object>();
 			from.add(TABLE1);
-			
+						
 			List<Object> where = new ArrayList<Object>();
 			where.add(CSTR1);
 			where.add(OPERATOR.EQ);
-			where.add(SqlStatement.toVV("0"));
+			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
 			whereCondition.put(COMMAND.WHERE, where);
 			
-			queryParameterSelect.put(COMMAND.SELECT, select);
-			queryParameterSelect.put(COMMAND.FROM, from);
-			queryParameterSelect.put(COMMAND.WHERECONDITION, whereCondition);
+			queryParameter.put(COMMAND.SELECT, select);
+			queryParameter.put(COMMAND.FROM, from);
+			queryParameter.put(COMMAND.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
-					mapperMap.selectList(key, queryParameterSelect);
+					mapperOracle.selectList(queryParameter);
 			assertEquals(1, result.size());
-			
-			java.sql.Timestamp timestampResult = (java.sql.Timestamp)(result.get(0).get(CTIMESTAMP));
-			java.sql.Timestamp timestampOrg = (java.sql.Timestamp)(itemSet1.get(0).get(CTIMESTAMP));
-			assertEquals(timestampOrg.getTime(), timestampResult.getTime());
 		}
+		dropOracleTables();
+	}
+	@Test
+	public void testInsertSelectMySql() {
+		IMapper mapperMySql = mapperMap.get("mapperSimpleMySql");
 		
+		int resultCount = 0;
 		
+		createMySqlTables();
+		
+		resultCount = this.insertMySqlItemsOneByOne();
+		assertEquals(itemCount, resultCount);
+		
+		dropMySqlTables();
+		
+		createMySqlTables();
+		
+		resultCount = this.insertMultipleMySqlItems();
+		assertEquals(itemCount, resultCount);
+
 		// select
-		{
-			String key = SESSION_ORACLE;
-			Map<Object,Object> queryParameterSelect = new LinkedHashMap<Object,Object>();
-				
+		for(int i=0; i<itemCount; i++){
+			Map<Object,Object> queryParameter = new LinkedHashMap<Object,Object>();
+			
 			List<Object> select = new ArrayList<Object>();
 			select.add("*");
-			
+
 			List<Object> from = new ArrayList<Object>();
 			from.add(TABLE1);
-			
+						
 			List<Object> where = new ArrayList<Object>();
 			where.add(CSTR1);
 			where.add(OPERATOR.EQ);
-			where.add(SqlStatement.toVV("0"));
+			where.add(SqlStatement.toVV(Integer.toString(i)));
 			Map<String,Object> whereCondition = new LinkedHashMap<String,Object>();
 			whereCondition.put(COMMAND.WHERE, where);
 			
-			queryParameterSelect.put(COMMAND.SELECT, select);
-			queryParameterSelect.put(COMMAND.FROM, from);
-			queryParameterSelect.put(COMMAND.WHERECONDITION, whereCondition);
+			queryParameter.put(COMMAND.SELECT, select);
+			queryParameter.put(COMMAND.FROM, from);
+			queryParameter.put(COMMAND.WHERECONDITION, whereCondition);
 	
 			List<Map<String,Object>> result = 
-					mapperMap.selectList(key, queryParameterSelect);
-			assertTrue(result.size() >=1 );
-//			for(Map<String,Object> e : result) {
-//				for(Object obj : e.entrySet()) {
-//					System.out.println(obj);
-//				}
-//			}
-			
-			oracle.sql.TIMESTAMP timestampResult = (oracle.sql.TIMESTAMP)(result.get(0).get(CTIMESTAMP.toUpperCase()));
-			assertTrue(timestampResult != null);
-			java.sql.Timestamp timestampOrg = (java.sql.Timestamp)(itemSet1.get(0).get(CTIMESTAMP));
-			assertTrue(timestampResult != null);
-//			assertEquals(timestampOrg,timestampResult);
+					mapperMySql.selectList(queryParameter);
+			assertEquals(1, result.size());
 		}
 		
-		dropTables();
-	}
+		dropMySqlTables();
+	}	
 }
